@@ -4,10 +4,31 @@ const topRatedMoviesURL = `https://api.themoviedb.org/3/movie/top_rated?api_key=
 const movieTrailerBaseURL = 'https://api.themoviedb.org/3/movie';
 const movieImageURL = 'http://image.tmdb.org/t/p/w185';
 const moviePosterURL = 'http://image.tmdb.org/t/p/w342';
+let movieId;
+let trailerClickEventListener;
 
 const getMovieTrailerURL = movieId => {
   return `${movieTrailerBaseURL}/${movieId}/videos?api_key=${api_key}&language=en-US`;
 }
+
+trailerClickEventListener = () => {
+  fetch(getMovieTrailerURL(movieId))
+    .then(response => response.json())
+    .then(({ results }) => {
+      if (results[0].site.toLowerCase() === 'youtube') {
+        // document.getElementById('modal-body').innerHTML = `
+        //   <iframe src="https://www.youtube.com/embed/${results[0].key}?autoplay=1" />
+        // `;
+        window.open(`https://www.youtube.com/watch?v=${results[0].key}`, '_blank');
+      }
+    });
+};
+
+const playTrailer = (event, movie) => {
+  console.log('Play trailer event >> ', event);
+  movieId = movie.id;
+  document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
+};
 
 const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('movie-title').innerHTML = movie.title;
@@ -19,31 +40,8 @@ const displayMovieDetailsModal = (event, movie) => {
   playTrailer(event, movie);
 };
 
-const playTrailer = (event, movie) => {
-  console.log('Play trailer event >> ', event);
-  document.getElementById('trailer').addEventListener('click', event => {
-    console.log('Event > ', event);
-    fetch(getMovieTrailerURL(movie.id))
-      .then(response => response.json())
-      .then(({ results }) => {
-        if (results[0].site.toLowerCase() === 'youtube') {
-          // document.getElementById('modal-body').innerHTML = `
-          //   <iframe src="https://www.youtube.com/embed/${results[0].key}?autoplay=1" />
-          // `;
-          window.open(`https://www.youtube.com/watch?v=${results[0].key}`, '_blank');
-        }
-      });
-  });
-};
-
 document.getElementById('modal-close').addEventListener('click', () => {
-  document.getElementById('trailer').removeEventListener('click');
-  // const trailerParent = document.getElementById('trailer').parentElement(); 
-  // document.getElementById('trailer').remove();
-  // const trailer = document.createElement('button');
-  // trailer.setAttribute('id', 'trailer');
-  // trailer.className = 'btn btn-default';
-  // trailerParent.appendChild(trailer);
+  document.getElementById('trailer').removeEventListener('click', trailerClickEventListener);
 });
 
 const fetchMovies = (url, topRated = false) => fetch(url)
@@ -70,16 +68,6 @@ const fetchMovies = (url, topRated = false) => fetch(url)
         trailer.setAttribute('data-target', '#movie-details-modal');
         displayMovieDetailsModal(event, movie);
       });
-
-      // trailer.addEventListener('click', () => {
-      //   fetch(getMovieTrailerURL(movie.id))
-      //     .then(response => response.json())
-      //     .then(({ results }) => {
-      //       if (results[0].site.toLowerCase() === 'youtube') {
-      //         window.open(`https://www.youtube.com/watch?v=${results[0].key}`, '_blank');
-      //       }
-      //     });
-      // });
     });
   });
 
