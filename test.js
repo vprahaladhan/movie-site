@@ -8,27 +8,29 @@ const getMovieTrailerURL = movieId => {
   return `${movieTrailerBaseURL}/${movieId}/videos?api_key=${api_key}&language=en-US`;
 }
 
-fetch(popularMoviesURL)
+const fetchMovies = (url, topRated = false) => fetch(url)
   .then(response => response.json())
   .then(response => {
-    response.results.forEach(movie => {
+    response.results.forEach((movie, index) => {
       const movieContainer = document.createElement('div');
-      movieContainer.style = 'display: inline; margin: 5px;'
+      movieContainer.className = `item ${index === 0 ? 'active' : ''}`;
+
+      const movieInnerContainer = document.createElement('div');
+      movieInnerContainer.className = 'col-xs-2';
 
       const trailer = document.createElement('button');
-      trailer.style =  'border: 0; background: none; cursor: pointer;';
-      // trailer.dataToggle = 'modal';
-      // trailer.dataTarget = 'modal-center';
 
       const moviePoster = document.createElement('img');
       moviePoster.src = movieImagesURL + movie.poster_path;
       moviePoster.alt = movie.title;
 
       trailer.appendChild(moviePoster);
-      movieContainer.appendChild(trailer);
-      document.getElementById('popular-movies').appendChild(movieContainer);
+      movieInnerContainer.appendChild(trailer);
+      movieContainer.appendChild(movieInnerContainer);
+      document.getElementById(topRated ? 'top-rated-inner' : 'most-popular-inner').appendChild(movieContainer);
 
-      trailer.addEventListener('click', () => {
+      movieContainer.addEventListener('click', () => {
+        alert('Clicked trailer!');
         fetch(getMovieTrailerURL(movie.id))
           .then(response => response.json())
           .then(({ results }) => {
@@ -39,3 +41,7 @@ fetch(popularMoviesURL)
       });
     });
   });
+
+fetchMovies(popularMoviesURL);
+
+fetchMovies(topRatedMoviesURL, true);
