@@ -4,28 +4,24 @@ const topRatedMoviesURL = `https://api.themoviedb.org/3/movie/top_rated?api_key=
 const movieTrailerBaseURL = 'https://api.themoviedb.org/3/movie';
 const movieImageURL = 'http://image.tmdb.org/t/p/w185';
 const moviePosterURL = 'http://image.tmdb.org/t/p/w342';
+
 let movieId;
-let trailerClickEventListener;
 
 const getMovieTrailerURL = movieId => {
   return `${movieTrailerBaseURL}/${movieId}/videos?api_key=${api_key}&language=en-US`;
 }
 
-trailerClickEventListener = () => {
+const trailerClickEventListener = () => {
   fetch(getMovieTrailerURL(movieId))
     .then(response => response.json())
     .then(({ results }) => {
       if (results[0].site.toLowerCase() === 'youtube') {
-        // document.getElementById('modal-body').innerHTML = `
-        //   <iframe src="https://www.youtube.com/embed/${results[0].key}?autoplay=1" />
-        // `;
         window.open(`https://www.youtube.com/watch?v=${results[0].key}`, '_blank');
       }
     });
 };
 
 const playTrailer = (event, movie) => {
-  console.log('Play trailer event >> ', event);
   movieId = movie.id;
   document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
 };
