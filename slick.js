@@ -9,17 +9,21 @@ const moviePosterURL = 'http://image.tmdb.org/t/p/w342';
 
 let movieId;
 
-document.getElementById('search-keyword').addEventListener('input', () => {
-  if (document.getElementById('search-keyword').value.length >= 5) {
-    fetch(`${searchMoviesURL}&query=${document.getElementById('search-keyword').value}`)
-      .then(response => response.json())
-      .then(results => console.log(results));
-  };
-});
-
 const getMovieTrailerURL = movieId => {
   return `${movieTrailerBaseURL}/${movieId}/videos?api_key=${api_key}&language=en-US`;
 }
+
+const clearMovieSearch = () => {
+  const movieSearchDiv = document.getElementById('movie-search');
+
+  const newMovieSearchDiv = document.createElement('div');
+  movieSearchDiv.parentNode.insertBefore(newMovieSearchDiv, movieSearchDiv.nextSibling);
+  movieSearchDiv.remove();
+
+  newMovieSearchDiv.id = 'movie-search';
+  newMovieSearchDiv.className = 'slick';
+  newMovieSearchDiv.style = 'width: 90%; margin: 0 auto;'
+};
 
 const trailerClickEventListener = () => {
   fetch(getMovieTrailerURL(movieId))
@@ -63,36 +67,62 @@ document.getElementById('modal-close').addEventListener('click', () => {
   document.getElementById('movie-poster-container').appendChild(imgPlaceholder);
 });
 
-const fetchMovies = (url, topRated = false) => fetch(url)
+const fetchMovies = (url, category) => fetch(url)
   .then(response => response.json())
   .then(response => {
     response.results.forEach(movie => {
-      const movieContainer = document.createElement('div');
-      const movieInnerContainer = document.createElement('div');
-      
-      const trailer = document.createElement('button');
-      trailer.setAttribute('data-toggle', 'modal');
-      trailer.style = 'border: 0; background: none; border-radius: 0px; cursor: pointer;'
-
-      const moviePoster = document.createElement('img');
-      moviePoster.src = movieImageURL + movie.poster_path;
-      moviePoster.alt = movie.title;
-
-      trailer.appendChild(moviePoster);
-      movieInnerContainer.appendChild(trailer);
-      movieContainer.appendChild(movieInnerContainer);
-      document.getElementById(topRated ? 'top-rated' : 'most-popular').appendChild(movieContainer);
-
-      trailer.addEventListener('click', event => {
-        trailer.setAttribute('data-target', '#movie-details-modal');
-        if (document.getElementById('trailer').disabled) {
-          document.getElementById('trailer').disabled = false;
-        };
-        displayMovieDetailsModal(event, movie);
-      });
+      if (movie.poster_path) {
+        const movieContainer = document.createElement('div');
+        const movieInnerContainer = document.createElement('div');
+        
+        const trailer = document.createElement('button');
+        trailer.setAttribute('data-toggle', 'modal');
+        trailer.style = 'border: 0; background: none; border-radius: 0px; cursor: pointer;'
+  
+        const moviePoster = document.createElement('img');
+        moviePoster.src = movieImageURL + movie.poster_path;
+        moviePoster.alt = movie.title;
+  
+        trailer.appendChild(moviePoster);
+        movieInnerContainer.appendChild(trailer);
+        movieContainer.appendChild(movieInnerContainer);
+  
+        let searchByCategory = '';
+        switch(category) {
+          case 'search': searchByCategory = 'movie-search'; break;
+          case 'rated': searchByCategory = 'most-popular'; break;
+          case 'popular': searchByCategory = 'top-rated'; break;
+        }
+        document.getElementById(searchByCategory).appendChild(movieContainer);
+  
+        trailer.addEventListener('click', event => {
+          trailer.setAttribute('data-target', '#movie-details-modal');
+          if (document.getElementById('trailer').disabled) {
+            document.getElementById('trailer').disabled = false;
+          };
+          displayMovieDetailsModal(event, movie);
+        });  
+      }
     });
   });
 
-fetchMovies(popularMoviesURL);
+document.getElementById('search-button').addEventListener('click', () => {
+  clearMovieSearch();
+ 
+  if (document.getElementById('search-keyword').value.length >= 5) {
+    fetchMovies(`${searchMoviesURL}&query=${document.getElementById('search-keyword').value}`, 'search')
+      .then(() => {
+        document.getElementById('search-keyword').value = '';
 
-fetchMovies(topRatedMoviesURL, true);
+        $('#movie-search').slick({
+          slidesToShow: 6,
+          slidesToScroll: 5,
+          arrows: true
+        });      
+      });
+  };
+});
+
+fetchMovies(popularMoviesURL, 'popular');
+
+fetchMovies(topRatedMoviesURL, 'rated');
