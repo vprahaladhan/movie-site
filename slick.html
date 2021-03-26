@@ -14,13 +14,18 @@
 </head>
 
 <body>
+  <div id='movie-search-block' class=""style="text-align:center; margin:10px">
+    <input id="search-keyword" type="text" placeholder="enter atleast 5 chars to start searching..." size="50"> 
+    <button id="search-button" type="button" class="btn btn-primary">Search</button> 
+  </div>
+
   <div style='width: 95%; margin: 0 auto;'>
-    <h3>MOST POPULAR MOVIES</h3>
+    <h2>MOST POPULAR MOVIES</h2>
   </div>
   <div id='most-popular' class='slick' style='width: 90%; margin: 0 auto;'></div>
 
   <div style='width: 95%; margin: 0 auto; margin-top: 50px'>
-    <h3>TOP RATED MOVIES</h3>
+    <h2>TOP RATED MOVIES</h2>
   </div>
   <div id='top-rated' class='slick' style='width: 90%; margin: 0 auto;'></div>
 
@@ -35,7 +40,9 @@
           <h2 id="movie-title" class="modal-title"></h2>
         </div>
         <div id="modal-body" class="modal-body">
-          <p style="text-align:center;"><img id="movie-poster" src="#" alt="Movie Poster"></p>
+          <div id="movie-poster-container" style="text-align:center;">
+            <p><img id="movie-poster" src="#" alt="Movie Poster"></p>
+          </div>
           <p id="movie-overview"></p>
           <p id="release-date"></p>
           <p id="average-vote"></p>
