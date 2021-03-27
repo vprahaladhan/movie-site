@@ -29,7 +29,7 @@ const trailerClickEventListener = () => {
   fetch(getMovieTrailerURL(movieId))
     .then(response => response.json())
     .then(({ results }) => {
-      if (results[0].site.toLowerCase() === 'youtube') {
+      if (results.length !== 0 && results[0].site.toLowerCase() === 'youtube') {
         document.getElementById('movie-poster-container').innerHTML = `
           <iframe 
             id="youtube-trailer"
@@ -90,8 +90,8 @@ const fetchMovies = (url, category) => fetch(url)
         let searchByCategory = '';
         switch(category) {
           case 'search': searchByCategory = 'movie-search'; break;
-          case 'rated': searchByCategory = 'most-popular'; break;
-          case 'popular': searchByCategory = 'top-rated'; break;
+          case 'rated': searchByCategory = 'top-rated'; break;
+          case 'popular': searchByCategory = 'most-popular'; break;
         }
         document.getElementById(searchByCategory).appendChild(movieContainer);
   
@@ -121,6 +121,31 @@ document.getElementById('search-button').addEventListener('click', () => {
         });      
       });
   };
+});
+
+document.getElementById('movie-rating').addEventListener('input', () => {
+  const rating = Number(document.getElementById('movie-rating').value);
+  console.log(isNaN(rating) || rating < 0.5 || rating > 10.0);
+
+  if (isNaN(rating) || rating < 0.5 || rating > 10.0) {
+    document.getElementById('submit-rating').disabled = true;    
+  }
+  else document.getElementById('submit-rating').disabled = false;
+});
+
+document.getElementById('submit-rating').addEventListener('click', () => {
+  const rating = Number(document.getElementById('movie-rating').value);
+
+  fetch(`${movieTrailerBaseURL}/${movieId}/rating?api_key=${api_key}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+      'Accept': 'application/json'
+    },
+    body: JSON.stringify({
+      value: rating
+    })
+  }).then(response => document.getElementById('movie-rating').value = '');
 });
 
 fetchMovies(popularMoviesURL, 'popular');

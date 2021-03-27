@@ -7,3 +7,22 @@
   text-align: center;
   border-top: 1px solid #e5e5e5;
 }
+
+.quick{
+  position: absolute;
+  left:0;
+  right:0;    
+  margin-top:-75%;
+  padding:0 5%;
+  width:100%;
+  background:blue;
+  display:none;
+}
+
+.outer:hover img{
+border: 1px solid blue;
+}
+
+.outer:hover .quick{
+   display:block;
+}
