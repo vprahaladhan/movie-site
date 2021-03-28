@@ -136,11 +136,12 @@ const postMovieRating = rating => {
       value: rating
     })
   }).then(response => {
+    response.json()
+      .then(result => console.log('Movie rating submission > ', result));
     document.getElementById('movie-rating').value = '';
     fetch(`${movieTrailerBaseURL}/${movieId}?api_key=${api_key}`)
       .then(response => response.json())
       .then(movie => {
-        console.log('Movie details > ', movie);
         document.getElementById('total-votes').innerHTML = `Total votes: ${movie.vote_count}`;
       })
   });

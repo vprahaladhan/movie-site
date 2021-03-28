@@ -69,6 +69,7 @@ document.getElementById('movie-rating').addEventListener('input', () => {
 });
 
 document.getElementById('submit-rating').addEventListener('click', () => {
+  const rating = Number(document.getElementById('movie-rating').value);
   if (tmdbSession.session_id && tmdbSession.expires_at > new Date()) {
     postMovieRating(rating);
   }
