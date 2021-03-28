@@ -19,6 +19,7 @@ document.getElementById('search-button').addEventListener('click', () => {
           slidesToScroll: 5,
           arrows: true,
           lazyLoad: 'ondemand',
+          dots: true,
           responsive: [
             {
               breakpoint: 1024,
