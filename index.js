@@ -1,16 +1,39 @@
+let movieId;
+let tmdbSession = {};
+
 const api_key = 'a2f05c95df66faa065b61cb42aae2c43';
+const language = 'language=en-US';
+
 const theMovieDBURL = 'https://api.themoviedb.org/3';
-const searchMoviesURL = `${theMovieDBURL}/search/movie?api_key=${api_key}&language=en-US&page=1&include_adult=false`;
-const popularMoviesURL = `${theMovieDBURL}/movie/popular?api_key=${api_key}&language=en-US&page=1`;
-const topRatedMoviesURL = `${theMovieDBURL}/movie/top_rated?api_key=${api_key}&language=en-US&page=1`;
+const searchMoviesURL = `${theMovieDBURL}/search/movie?api_key=${api_key}&${language}&page=1&include_adult=false`;
+const popularMoviesURL = `${theMovieDBURL}/movie/popular?api_key=${api_key}&${language}&page=1`;
+const topRatedMoviesURL = `${theMovieDBURL}/movie/top_rated?api_key=${api_key}&${language}&page=1`;
 const movieTrailerBaseURL = `${theMovieDBURL}/movie`;
 const movieImageURL = 'http://image.tmdb.org/t/p/w185';
 const moviePosterURL = 'http://image.tmdb.org/t/p/w342';
+const youtubeTrailerURL = 'https://www.youtube.com/embed';
 
-let movieId;
+const getTMDBSession = () => {
+  return fetch(`${theMovieDBURL}/authentication/guest_session/new?api_key=${api_key}`)
+    .then(response => response.json())
+    .then(result => tmdbSession = result.success && {
+      session_id: result.guest_session_id,
+      expires_at: new Date(result.expires_at)
+    }
+    );
+};
+
+const getMovieVoteCount = movieId => {
+  return fetch(`${movieTrailerBaseURL}/${movieId}?api_key=${api_key}`)
+    .then(response => response.json())
+    .then(movie => {
+      console.log('Movie vote count >> ', movie.vote_count);
+      return movie.vote_count
+    });
+}
 
 const getMovieTrailerURL = movieId => {
-  return `${movieTrailerBaseURL}/${movieId}/videos?api_key=${api_key}&language=en-US`;
+  return `${movieTrailerBaseURL}/${movieId}/videos?api_key=${api_key}&${language}`;
 }
 
 const clearMovieSearch = () => {
@@ -35,7 +58,7 @@ const trailerClickEventListener = () => {
             id="youtube-trailer"
             width="400px" 
             height="400px"
-            src="https://www.youtube.com/embed/${results[0].key}?autoplay=1">
+            src="${youtubeTrailerURL}/${results[0].key}?autoplay=1">
           </iframe>
         `;
         document.getElementById('trailer').disabled = true;
@@ -55,17 +78,10 @@ const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('movie-overview').innerHTML = movie.overview;
   document.getElementById('release-date').innerHTML = `Released: ${movie.release_date}`;
   document.getElementById('average-vote').innerHTML = `Avg. vote: ${movie.vote_average}`;
+  getMovieVoteCount(movie.id)
+    .then(voteCount => document.getElementById('total-votes').innerHTML = `Total votes: ${voteCount}`);
   playTrailer(event, movie);
 };
-
-document.getElementById('modal-close').addEventListener('click', () => {
-  document.getElementById('trailer').removeEventListener('click', trailerClickEventListener);
-  document.getElementById('youtube-trailer').remove();
-  
-  const imgPlaceholder = document.createElement('p');
-  imgPlaceholder.innerHTML = '<p><img id="movie-poster" src="#" alt="Movie Poster"></p>';
-  document.getElementById('movie-poster-container').appendChild(imgPlaceholder);
-});
 
 const fetchMovies = (url, category) => fetch(url)
   .then(response => response.json())
@@ -74,69 +90,40 @@ const fetchMovies = (url, category) => fetch(url)
       if (movie.poster_path) {
         const movieContainer = document.createElement('div');
         const movieInnerContainer = document.createElement('div');
-        
+
         const trailer = document.createElement('button');
         trailer.setAttribute('data-toggle', 'modal');
         trailer.style = 'border: 0; background: none; border-radius: 0px; cursor: pointer;'
-  
+
         const moviePoster = document.createElement('img');
-        moviePoster.src = movieImageURL + movie.poster_path;
+        moviePoster.setAttribute('data-lazy', movieImageURL + movie.poster_path);
         moviePoster.alt = movie.title;
-  
+
         trailer.appendChild(moviePoster);
         movieInnerContainer.appendChild(trailer);
         movieContainer.appendChild(movieInnerContainer);
-  
+
         let searchByCategory = '';
-        switch(category) {
+        switch (category) {
           case 'search': searchByCategory = 'movie-search'; break;
           case 'rated': searchByCategory = 'top-rated'; break;
           case 'popular': searchByCategory = 'most-popular'; break;
         }
         document.getElementById(searchByCategory).appendChild(movieContainer);
-  
+
         trailer.addEventListener('click', event => {
           trailer.setAttribute('data-target', '#movie-details-modal');
           if (document.getElementById('trailer').disabled) {
             document.getElementById('trailer').disabled = false;
           };
           displayMovieDetailsModal(event, movie);
-        });  
+        });
       }
     });
   });
 
-document.getElementById('search-button').addEventListener('click', () => {
-  clearMovieSearch();
- 
-  if (document.getElementById('search-keyword').value.length >= 5) {
-    fetchMovies(`${searchMoviesURL}&query=${document.getElementById('search-keyword').value}`, 'search')
-      .then(() => {
-        document.getElementById('search-keyword').value = '';
-
-        $('#movie-search').slick({
-          slidesToShow: 6,
-          slidesToScroll: 5,
-          arrows: true
-        });      
-      });
-  };
-});
-
-document.getElementById('movie-rating').addEventListener('input', () => {
-  const rating = Number(document.getElementById('movie-rating').value);
-  console.log(isNaN(rating) || rating < 0.5 || rating > 10.0);
-
-  if (isNaN(rating) || rating < 0.5 || rating > 10.0) {
-    document.getElementById('submit-rating').disabled = true;    
-  }
-  else document.getElementById('submit-rating').disabled = false;
-});
-
-document.getElementById('submit-rating').addEventListener('click', () => {
-  const rating = Number(document.getElementById('movie-rating').value);
-
-  fetch(`${movieTrailerBaseURL}/${movieId}/rating?api_key=${api_key}`, {
+const postMovieRating = rating => {
+  fetch(`${movieTrailerBaseURL}/${movieId}/rating?api_key=${api_key}&guest_session_id=${tmdbSession.session_id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -145,8 +132,18 @@ document.getElementById('submit-rating').addEventListener('click', () => {
     body: JSON.stringify({
       value: rating
     })
-  }).then(response => document.getElementById('movie-rating').value = '');
-});
+  }).then(response => {
+    document.getElementById('movie-rating').value = '';
+    fetch(`${movieTrailerBaseURL}/${movieId}?api_key=${api_key}`)
+      .then(response => response.json())
+      .then(movie => {
+        console.log('Movie details > ', movie);
+        document.getElementById('total-votes').innerHTML = `Total votes: ${movie.vote_count}`;
+      })
+  });
+};
+
+getTMDBSession();
 
 fetchMovies(popularMoviesURL, 'popular');
 

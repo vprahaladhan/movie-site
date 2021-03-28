@@ -1,5 +1,13 @@
+body {
+  margin-left: 10px;
+}
+
 .slick-prev:before, .slick-next:before {
   color: blue;
+}
+
+.slick-active {
+  text-align: center;
 }
 
 .modal-footer {
