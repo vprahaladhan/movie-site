@@ -63,6 +63,9 @@ const trailerClickEventListener = () => {
         `;
         document.getElementById('trailer').disabled = true;
       }
+      else {
+        alert('Sorry, No trailers available for the movie!')
+      }
     });
 };
 
