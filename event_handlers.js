@@ -19,7 +19,6 @@ document.getElementById('search-button').addEventListener('click', () => {
           slidesToScroll: 5,
           arrows: true,
           lazyLoad: 'ondemand',
-          dots: true,
           responsive: [
             {
               breakpoint: 1024,
@@ -36,7 +35,7 @@ document.getElementById('search-button').addEventListener('click', () => {
                 slidesToShow: 3,
                 slidesToScroll: 3,
                 infinite: true,
-                dots: true
+                dots: false
               }
             },
             {
@@ -44,6 +43,7 @@ document.getElementById('search-button').addEventListener('click', () => {
               settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2,
+                dots: false
               }
             },
             {
@@ -51,6 +51,7 @@ document.getElementById('search-button').addEventListener('click', () => {
               settings: {
                 slidesToShow: 1,
                 slidesToScroll: 1,
+                dots: false
               }
             }
           ]
