@@ -10,53 +10,21 @@ document.getElementById('search-button').addEventListener('click', () => {
   clearMovieSearch();
 
   if (document.getElementById('search-keyword').value.length >= 5) {
-    fetchMovies(`${searchMoviesURL}&query=${document.getElementById('search-keyword').value}`, 'search')
+    const keyword = document.getElementById('search-keyword').value;
+    fetchMovies(`${searchMoviesURL}&query=${keyword}&page=${currentPage}`, 'search')
       .then(() => {
-        document.getElementById('search-keyword').value = '';
-
-        $('#movie-search').slick({
-          slidesToShow: 5,
-          slidesToScroll: 5,
-          arrows: true,
-          lazyLoad: 'ondemand',
-          responsive: [
-            {
-              breakpoint: 1024,
-              settings: {
-                slidesToShow: 4,
-                slidesToScroll: 4,
-                infinite: true,
-                dots: true
-              }
-            },
-            {
-              breakpoint: 884,
-              settings: {
-                slidesToShow: 3,
-                slidesToScroll: 3,
-                infinite: true,
-                dots: false
-              }
-            },
-            {
-              breakpoint: 650,
-              settings: {
-                slidesToShow: 2,
-                slidesToScroll: 2,
-                dots: false
-              }
-            },
-            {
-              breakpoint: 450,
-              settings: {
-                slidesToShow: 1,
-                slidesToScroll: 1,
-                dots: false
-              }
-            }
-          ]
+        $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
+          if (nextSlide === 0) {
+            fetch(`${searchMoviesURL}&query=${keyword}&page=${++currentPage}`)
+              .then(response => response.json())
+              .then(({ results }) => results.forEach(movie => {
+                $('#movie-search').slick('slickAdd', createMovieSlide(movie));
+              }));
+          }
         });
+        initializeSlick();
       });
+    document.getElementById('search-keyword').value = '';
   };
 });
 
@@ -79,3 +47,48 @@ document.getElementById('submit-rating').addEventListener('click', () => {
       .then(() => postMovieRating(rating))
   };
 });
+
+const initializeSlick = () => {
+  $('#movie-search').slick({
+    slidesToShow: 5,
+    slidesToScroll: 5,
+    arrows: true,
+    lazyLoad: 'ondemand',
+    infinite: true,
+    dots: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 4,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 884,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          dots: false
+        }
+      },
+      {
+        breakpoint: 650,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          dots: false
+        }
+      },
+      {
+        breakpoint: 450,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          dots: false
+        }
+      }
+    ]
+  });
+};

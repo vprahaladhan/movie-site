@@ -1,11 +1,14 @@
 let movieId;
 let tmdbSession = {};
+let currentPage = 1;
+let totalPages, totalResults;
+
 
 const api_key = 'a2f05c95df66faa065b61cb42aae2c43';
 const language = 'language=en-US';
 
 const theMovieDBURL = 'https://api.themoviedb.org/3';
-const searchMoviesURL = `${theMovieDBURL}/search/movie?api_key=${api_key}&${language}&page=1&include_adult=false`;
+const searchMoviesURL = `${theMovieDBURL}/search/movie?api_key=${api_key}&${language}&include_adult=false`;
 const popularMoviesURL = `${theMovieDBURL}/movie/popular?api_key=${api_key}&${language}&page=1`;
 const topRatedMoviesURL = `${theMovieDBURL}/movie/top_rated?api_key=${api_key}&${language}&page=1`;
 const movieTrailerBaseURL = `${theMovieDBURL}/movie`;
@@ -37,15 +40,11 @@ const getMovieTrailerURL = movieId => {
 }
 
 const clearMovieSearch = () => {
-  const movieSearchDiv = document.getElementById('movie-search');
-
   const newMovieSearchDiv = document.createElement('div');
-  movieSearchDiv.parentNode.insertBefore(newMovieSearchDiv, movieSearchDiv.nextSibling);
-  movieSearchDiv.remove();
-
   newMovieSearchDiv.id = 'movie-search';
   newMovieSearchDiv.className = 'slick';
   newMovieSearchDiv.style = 'width: 90%; margin: 0 auto;'
+  document.getElementById('movie-search').replaceWith(newMovieSearchDiv);
 };
 
 const trailerClickEventListener = () => {
@@ -76,7 +75,7 @@ const playTrailer = (event, movie) => {
 
 const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('movie-title').innerHTML = movie.title;
-  document.getElementById('movie-poster').src = moviePosterURL + movie.poster_path;
+  document.getElementById('movie-poster').src = movie.poster_path ? moviePosterURL + movie.poster_path : 'assets/no-image.jpg';
   document.getElementById('movie-poster').alt = movie.title;
   document.getElementById('movie-overview').innerHTML = movie.overview;
   document.getElementById('release-date').innerHTML = `Released: ${movie.release_date}`;
@@ -86,42 +85,52 @@ const displayMovieDetailsModal = (event, movie) => {
   playTrailer(event, movie);
 };
 
+const createMovieSlide = movie => {
+  const movieContainer = document.createElement('div');
+  const movieInnerContainer = document.createElement('div');
+
+  const trailer = document.createElement('button');
+  trailer.setAttribute('data-toggle', 'modal');
+  trailer.style = 'border: 0; background: none; border-radius: 0px; cursor: pointer;'
+
+  const moviePoster = document.createElement('img');
+  moviePoster.setAttribute('data-lazy', movie.poster_path ? movieImageURL + movie.poster_path : 'assets/no-image.jpg');
+  moviePoster.alt = movie.title;
+
+  trailer.appendChild(moviePoster);
+  movieInnerContainer.appendChild(trailer);
+  movieContainer.appendChild(movieInnerContainer);
+
+  trailer.addEventListener('click', event => {
+    trailer.setAttribute('data-target', '#movie-details-modal');
+    if (document.getElementById('trailer').disabled) {
+      document.getElementById('trailer').disabled = false;
+    };
+    displayMovieDetailsModal(event, movie);
+  });
+
+  return movieContainer;
+}
+
 const fetchMovies = (url, category) => fetch(url)
   .then(response => response.json())
   .then(response => {
+    if (category === 'search') {
+      currentPage = response.page;
+      totalPages = response.total_pages;
+      totalResults = response.total_results;
+    };
+
     response.results.forEach(movie => {
-      if (movie.poster_path) {
-        const movieContainer = document.createElement('div');
-        const movieInnerContainer = document.createElement('div');
-
-        const trailer = document.createElement('button');
-        trailer.setAttribute('data-toggle', 'modal');
-        trailer.style = 'border: 0; background: none; border-radius: 0px; cursor: pointer;'
-
-        const moviePoster = document.createElement('img');
-        moviePoster.setAttribute('data-lazy', movieImageURL + movie.poster_path);
-        moviePoster.alt = movie.title;
-
-        trailer.appendChild(moviePoster);
-        movieInnerContainer.appendChild(trailer);
-        movieContainer.appendChild(movieInnerContainer);
-
+      // if (movie.poster_path) {
         let searchByCategory = '';
         switch (category) {
           case 'search': searchByCategory = 'movie-search'; break;
           case 'rated': searchByCategory = 'top-rated'; break;
           case 'popular': searchByCategory = 'most-popular'; break;
         }
-        document.getElementById(searchByCategory).appendChild(movieContainer);
-
-        trailer.addEventListener('click', event => {
-          trailer.setAttribute('data-target', '#movie-details-modal');
-          if (document.getElementById('trailer').disabled) {
-            document.getElementById('trailer').disabled = false;
-          };
-          displayMovieDetailsModal(event, movie);
-        });
-      }
+        document.getElementById(searchByCategory).appendChild(createMovieSlide(movie));
+      // };
     });
   });
 
