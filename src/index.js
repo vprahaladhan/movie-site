@@ -1,10 +1,16 @@
 import './styles/index.css';
 import * as Utils from './constants';
+import noImage from './assets/no-image.jpg'
 
 export let movieId;
 export let tmdbSession = {};
 export let currentPage = 1;
 export let totalPages, totalResults;
+
+export const setCurrentPage = pageNo => {
+  currentPage = pageNo
+  return currentPage; 
+};
 
 export const getTMDBSession = () => {
   return fetch(`${Utils.theMovieDBURL}/authentication/guest_session/new?api_key=${Utils.api_key}`)
@@ -26,7 +32,7 @@ export const getMovieVoteCount = movieId => {
 }
 
 export const getMovieTrailerURL = movieId => {
-  return `${Utils.movieTrailerBaseURL}/${movieId}/videos?api_key=${Utils.api_key}&${language}`;
+  return `${Utils.movieTrailerBaseURL}/${movieId}/videos?api_key=${Utils.api_key}&${Utils.language}`;
 }
 
 export const clearMovieSearch = () => {
@@ -38,6 +44,7 @@ export const clearMovieSearch = () => {
 };
 
 export const trailerClickEventListener = () => {
+  console.log('Movie ID > ', movieId);
   fetch(getMovieTrailerURL(movieId))
     .then(response => response.json())
     .then(({ results }) => {
@@ -60,7 +67,7 @@ export const trailerClickEventListener = () => {
 
 export const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('movie-title').innerHTML = movie.title;
-  document.getElementById('movie-poster').src = movie.poster_path ? Utils.moviePosterURL + movie.poster_path : 'assets/no-image.jpg';
+  document.getElementById('movie-poster').src = movie.poster_path ? Utils.moviePosterURL + movie.poster_path : noImage;
   document.getElementById('movie-poster').alt = movie.title;
   document.getElementById('movie-overview').innerHTML = movie.overview;
   document.getElementById('release-date').innerHTML = `Released: ${movie.release_date}`;
@@ -75,6 +82,7 @@ export const displayMovieDetailsModal = (event, movie) => {
     document.getElementById(`like-${movie.id}`).classList.toggle('liked');
   };
 
+  movieId = movie.id;
   document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
 };
 
@@ -88,7 +96,7 @@ export const createMovieSlide = movie => {
   trailer.style = 'border: 0; background: none; border-radius: 0px; cursor: pointer;'
 
   const moviePoster = document.createElement('img');
-  moviePoster.setAttribute('data-lazy', movie.poster_path ? Utils.movieImageURL + movie.poster_path : 'assets/no-image.jpg');
+  moviePoster.setAttribute('data-lazy', movie.poster_path ? Utils.movieImageURL + movie.poster_path : noImage);
   moviePoster.alt = movie.title;
   
   const likeIcon = document.createElement('div');

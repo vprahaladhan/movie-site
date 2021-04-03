@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   "mode": "none",
-  "entry": "./src/index.js",
+  "entry": ['./src/index.js', './src/event_handlers.js'],
   "output": {
     "path": __dirname + '/dist',
     "filename": "bundle.js"
@@ -19,6 +19,10 @@ module.exports = {
           "css-loader"
         ]
       },
+      {
+        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        type: 'asset/resource',
+      }
     ]
   }
 };

@@ -1,6 +1,15 @@
-import { currentPage, clearMovieSearch, createMovieSlide, tmdbSession, getTMDBSession, postMovieRating } from './index';
+import {  currentPage,
+          setCurrentPage, 
+          clearMovieSearch, 
+          createMovieSlide, 
+          tmdbSession, 
+          getTMDBSession, 
+          postMovieRating,
+          fetchMovies } from './index';
+import { searchMoviesURL } from './constants'
 
 document.getElementById('modal-close').onclick = () => {
+  console.log('Modal closing...');
   if (document.getElementById('youtube-trailer')) {
     document.getElementById('movie-poster-container').innerHTML = `
       <p><img id="movie-poster" src="#" alt="Movie Poster"></p>`;
@@ -17,7 +26,7 @@ document.getElementById('search-button').addEventListener('click', () => {
         $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
           const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
           if (currentSlide + slidesToShow >= (10 * (currentPage + 1))) {
-            fetch(`${searchMoviesURL}&query=${keyword}&page=${++currentPage}`)
+            fetch(`${searchMoviesURL}&query=${keyword}&page=${setCurrentPage(currentPage + 1)}`)
               .then(response => response.json())
               .then(({ results }) => results.forEach(movie => {
                 $('#movie-search').slick('slickAdd', createMovieSlide(movie));
