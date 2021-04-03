@@ -1,10 +1,13 @@
-let movieId;
-let tmdbSession = {};
-let currentPage = 1;
-let totalPages, totalResults;
+import './styles/index.css';
+import * as Utils from './constants';
 
-const getTMDBSession = () => {
-  return fetch(`${theMovieDBURL}/authentication/guest_session/new?api_key=${api_key}`)
+export let movieId;
+export let tmdbSession = {};
+export let currentPage = 1;
+export let totalPages, totalResults;
+
+export const getTMDBSession = () => {
+  return fetch(`${Utils.theMovieDBURL}/authentication/guest_session/new?api_key=${Utils.api_key}`)
     .then(response => response.json())
     .then(result => tmdbSession = result.success && {
       session_id: result.guest_session_id,
@@ -13,8 +16,8 @@ const getTMDBSession = () => {
     );
 };
 
-const getMovieVoteCount = movieId => {
-  return fetch(`${movieTrailerBaseURL}/${movieId}?api_key=${api_key}`)
+export const getMovieVoteCount = movieId => {
+  return fetch(`${Utils.movieTrailerBaseURL}/${movieId}?api_key=${Utils.api_key}`)
     .then(response => response.json())
     .then(movie => {
       console.log('Movie vote count >> ', movie.vote_count);
@@ -22,11 +25,11 @@ const getMovieVoteCount = movieId => {
     });
 }
 
-const getMovieTrailerURL = movieId => {
-  return `${movieTrailerBaseURL}/${movieId}/videos?api_key=${api_key}&${language}`;
+export const getMovieTrailerURL = movieId => {
+  return `${Utils.movieTrailerBaseURL}/${movieId}/videos?api_key=${Utils.api_key}&${language}`;
 }
 
-const clearMovieSearch = () => {
+export const clearMovieSearch = () => {
   const newMovieSearchDiv = document.createElement('div');
   newMovieSearchDiv.id = 'movie-search';
   newMovieSearchDiv.className = 'slick';
@@ -34,7 +37,7 @@ const clearMovieSearch = () => {
   document.getElementById('movie-search').replaceWith(newMovieSearchDiv);
 };
 
-const trailerClickEventListener = () => {
+export const trailerClickEventListener = () => {
   fetch(getMovieTrailerURL(movieId))
     .then(response => response.json())
     .then(({ results }) => {
@@ -44,7 +47,7 @@ const trailerClickEventListener = () => {
             id="youtube-trailer"
             width="400px" 
             height="400px"
-            src="${youtubeTrailerURL}/${results[0].key}?autoplay=1">
+            src="${Utils.youtubeTrailerURL}/${results[0].key}?autoplay=1">
           </iframe>
         `;
         document.getElementById('trailer').disabled = true;
@@ -55,9 +58,9 @@ const trailerClickEventListener = () => {
     });
 };
 
-const displayMovieDetailsModal = (event, movie) => {
+export const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('movie-title').innerHTML = movie.title;
-  document.getElementById('movie-poster').src = movie.poster_path ? moviePosterURL + movie.poster_path : 'assets/no-image.jpg';
+  document.getElementById('movie-poster').src = movie.poster_path ? Utils.moviePosterURL + movie.poster_path : 'assets/no-image.jpg';
   document.getElementById('movie-poster').alt = movie.title;
   document.getElementById('movie-overview').innerHTML = movie.overview;
   document.getElementById('release-date').innerHTML = `Released: ${movie.release_date}`;
@@ -75,7 +78,7 @@ const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
 };
 
-const createMovieSlide = movie => {
+export const createMovieSlide = movie => {
   const movieContainer = document.createElement('div');
   const movieInnerContainer = document.createElement('div');
   movieInnerContainer.className = 'container';
@@ -85,7 +88,7 @@ const createMovieSlide = movie => {
   trailer.style = 'border: 0; background: none; border-radius: 0px; cursor: pointer;'
 
   const moviePoster = document.createElement('img');
-  moviePoster.setAttribute('data-lazy', movie.poster_path ? movieImageURL + movie.poster_path : 'assets/no-image.jpg');
+  moviePoster.setAttribute('data-lazy', movie.poster_path ? Utils.movieImageURL + movie.poster_path : 'assets/no-image.jpg');
   moviePoster.alt = movie.title;
   
   const likeIcon = document.createElement('div');
@@ -114,7 +117,7 @@ const createMovieSlide = movie => {
   return movieContainer;
 }
 
-const fetchMovies = (url, category) => fetch(url)
+export const fetchMovies = (url, category) => fetch(url)
   .then(response => response.json())
   .then(response => {
     if (category === 'search') {
@@ -134,8 +137,8 @@ const fetchMovies = (url, category) => fetch(url)
     });
   });
 
-const postMovieRating = rating => {
-  fetch(`${movieTrailerBaseURL}/${movieId}/rating?api_key=${api_key}&guest_session_id=${tmdbSession.session_id}`, {
+export const postMovieRating = rating => {
+  fetch(`${Utils.movieTrailerBaseURL}/${movieId}/rating?api_key=${Utils.api_key}&guest_session_id=${tmdbSession.session_id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -158,6 +161,6 @@ const postMovieRating = rating => {
 
 getTMDBSession();
 
-fetchMovies(popularMoviesURL, 'popular');
+fetchMovies(Utils.popularMoviesURL, 'popular');
 
-fetchMovies(topRatedMoviesURL, 'rated');
+fetchMovies(Utils.topRatedMoviesURL, 'rated');

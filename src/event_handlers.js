@@ -1,3 +1,5 @@
+import { currentPage, clearMovieSearch, createMovieSlide, tmdbSession, getTMDBSession, postMovieRating } from './index';
+
 document.getElementById('modal-close').onclick = () => {
   if (document.getElementById('youtube-trailer')) {
     document.getElementById('movie-poster-container').innerHTML = `
