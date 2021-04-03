@@ -27,10 +27,92 @@ body {
   display:none;
 }
 
-.outer:hover img{
-border: 1px solid blue;
+/* .outer:hover img{
+  border: 1px solid blue;
 }
 
 .outer:hover .quick{
-   display:block;
+  display:block;
+} */
+
+/* Container needed to position the overlay. Adjust the width as needed */
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Make the image to responsive */
+.image {
+  width: 100%;
+  height: auto;
+}
+
+/* The overlay effect (full height and width) - lays on top of the container and over the image */
+.overlay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  opacity: 1;
+  transition: .3s ease;
+}
+
+/* When you mouse over the container, fade in the overlay icon*/
+/* .container:hover .overlay {
+  opacity: 1;
+} */
+
+/* The icon inside the overlay is positioned in the middle vertically and horizontally */
+.icon {
+  color: white;
+  font-size: 20px;
+  border-radius: 50%;
+  background: none;
+  position: absolute;
+  top: 8%;
+  left: 80%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+/* When you move the mouse over the icon, change color */
+.liked {
+  color: rgba(255, 182, 194, 0.849);
+}
+
+/* .fa-heart:hover {
+  color: rgba(255, 182, 194, 0.849);
+} */
+
+.liked {
+  color: pink;
+}
+
+.unliked {
+  color: white;
+}
+
+a:active, a:focus, a:visited {
+  outline: none;
+  text-decoration: none;
+  box-shadow: none;
+  border: none;
+  -moz-outline-style: none;
+}
+
+.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {
+  outline: none;
+}
+
+.show {
+  display: block;
+}
+
+.hide {
+  display: none;
 }

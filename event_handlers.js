@@ -1,20 +1,20 @@
-document.getElementById('modal-close').addEventListener('click', () => {
-  document.getElementById('trailer').removeEventListener('click', trailerClickEventListener);
+document.getElementById('modal-close').onclick = () => {
   if (document.getElementById('youtube-trailer')) {
     document.getElementById('movie-poster-container').innerHTML = `
       <p><img id="movie-poster" src="#" alt="Movie Poster"></p>`;
   };
-});
+};
 
 document.getElementById('search-button').addEventListener('click', () => {
   clearMovieSearch();
 
-  if (document.getElementById('search-keyword').value.length >= 5) {
+  if (document.getElementById('search-keyword').value.length >= 1) {
     const keyword = document.getElementById('search-keyword').value;
     fetchMovies(`${searchMoviesURL}&query=${keyword}&page=${currentPage}`, 'search')
       .then(() => {
         $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
-          if (nextSlide === 0) {
+          const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
+          if (currentSlide + slidesToShow >= (10 * (currentPage + 1))) {
             fetch(`${searchMoviesURL}&query=${keyword}&page=${++currentPage}`)
               .then(response => response.json())
               .then(({ results }) => results.forEach(movie => {

@@ -3,19 +3,6 @@ let tmdbSession = {};
 let currentPage = 1;
 let totalPages, totalResults;
 
-
-const api_key = 'a2f05c95df66faa065b61cb42aae2c43';
-const language = 'language=en-US';
-
-const theMovieDBURL = 'https://api.themoviedb.org/3';
-const searchMoviesURL = `${theMovieDBURL}/search/movie?api_key=${api_key}&${language}&include_adult=false`;
-const popularMoviesURL = `${theMovieDBURL}/movie/popular?api_key=${api_key}&${language}&page=1`;
-const topRatedMoviesURL = `${theMovieDBURL}/movie/top_rated?api_key=${api_key}&${language}&page=1`;
-const movieTrailerBaseURL = `${theMovieDBURL}/movie`;
-const movieImageURL = 'http://image.tmdb.org/t/p/w185';
-const moviePosterURL = 'http://image.tmdb.org/t/p/w342';
-const youtubeTrailerURL = 'https://www.youtube.com/embed';
-
 const getTMDBSession = () => {
   return fetch(`${theMovieDBURL}/authentication/guest_session/new?api_key=${api_key}`)
     .then(response => response.json())
@@ -68,10 +55,10 @@ const trailerClickEventListener = () => {
     });
 };
 
-const playTrailer = (event, movie) => {
-  movieId = movie.id;
-  document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
-};
+// const playTrailer = (event, movie) => {
+//   movieId = movie.id;
+//   document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
+// };
 
 const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('movie-title').innerHTML = movie.title;
@@ -80,14 +67,23 @@ const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('movie-overview').innerHTML = movie.overview;
   document.getElementById('release-date').innerHTML = `Released: ${movie.release_date}`;
   document.getElementById('average-vote').innerHTML = `Avg. vote: ${movie.vote_average}`;
-  getMovieVoteCount(movie.id)
-    .then(voteCount => document.getElementById('total-votes').innerHTML = `Total votes: ${voteCount}`);
-  playTrailer(event, movie);
+
+  if (document.getElementById(`like-${movie.id}`).className.includes('liked')) {
+    document.getElementById('like-icon').classList.add('liked');
+  }
+
+  document.getElementById('like-icon').onclick = () => {
+    document.getElementById('like-icon').classList.toggle('liked');
+    document.getElementById(`like-${movie.id}`).classList.toggle('liked');
+  };
+
+  document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
 };
 
 const createMovieSlide = movie => {
   const movieContainer = document.createElement('div');
   const movieInnerContainer = document.createElement('div');
+  movieInnerContainer.className = 'container';
 
   const trailer = document.createElement('button');
   trailer.setAttribute('data-toggle', 'modal');
@@ -96,8 +92,14 @@ const createMovieSlide = movie => {
   const moviePoster = document.createElement('img');
   moviePoster.setAttribute('data-lazy', movie.poster_path ? movieImageURL + movie.poster_path : 'assets/no-image.jpg');
   moviePoster.alt = movie.title;
+  
+  const likeIcon = document.createElement('div');
+  likeIcon.id = `like-${movie.id}`;
+  likeIcon.className = "btn btn-floating icon";
+  likeIcon.innerHTML = '<i class="fa fa-heart"></i>';
 
   trailer.appendChild(moviePoster);
+  trailer.appendChild(likeIcon);
   movieInnerContainer.appendChild(trailer);
   movieContainer.appendChild(movieInnerContainer);
 
@@ -107,6 +109,11 @@ const createMovieSlide = movie => {
       document.getElementById('trailer').disabled = false;
     };
     displayMovieDetailsModal(event, movie);
+  });
+
+  likeIcon.addEventListener('click', event => {
+    event.stopPropagation();
+    likeIcon.classList.toggle('liked');
   });
 
   return movieContainer;
@@ -122,15 +129,13 @@ const fetchMovies = (url, category) => fetch(url)
     };
 
     response.results.forEach(movie => {
-      // if (movie.poster_path) {
-        let searchByCategory = '';
-        switch (category) {
-          case 'search': searchByCategory = 'movie-search'; break;
-          case 'rated': searchByCategory = 'top-rated'; break;
-          case 'popular': searchByCategory = 'most-popular'; break;
-        }
-        document.getElementById(searchByCategory).appendChild(createMovieSlide(movie));
-      // };
+      let searchByCategory = '';
+      switch (category) {
+        case 'search': searchByCategory = 'movie-search'; break;
+        case 'rated': searchByCategory = 'top-rated'; break;
+        case 'popular': searchByCategory = 'most-popular'; break;
+      }
+      document.getElementById(searchByCategory).appendChild(createMovieSlide(movie));
     });
   });
 
@@ -144,16 +149,16 @@ const postMovieRating = rating => {
     body: JSON.stringify({
       value: rating
     })
-  }).then(response => {
-    response.json()
-      .then(result => console.log('Movie rating submission > ', result));
-    document.getElementById('movie-rating').value = '';
-    fetch(`${movieTrailerBaseURL}/${movieId}?api_key=${api_key}`)
-      .then(response => response.json())
-      .then(movie => {
-        document.getElementById('total-votes').innerHTML = `Total votes: ${movie.vote_count}`;
-      })
-  });
+  }).then(response => response.json())
+    .then(result => {
+      if (result.success) {
+        document.getElementById('movie-rating').value = '';
+        document.getElementById('rating-success-msg').className = 'show';
+        setTimeout(() => {
+          document.getElementById('rating-success-msg').className = 'hide';
+        }, 2000);
+      };
+    });
 };
 
 getTMDBSession();
