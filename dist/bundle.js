@@ -519,7 +519,7 @@ let currentPage = 1;
 let totalPages, totalResults;
 
 const getTMDBSession = () => {
-  return fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.theMovieDBURL}/authentication/guest_session/new?api_key=${api_key}`)
+  return fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.theMovieDBURL}/authentication/guest_session/new?api_key=${_constants__WEBPACK_IMPORTED_MODULE_1__.api_key}`)
     .then(response => response.json())
     .then(result => tmdbSession = result.success && {
       session_id: result.guest_session_id,
@@ -529,7 +529,7 @@ const getTMDBSession = () => {
 };
 
 const getMovieVoteCount = movieId => {
-  return fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.movieTrailerBaseURL}/${movieId}?api_key=${api_key}`)
+  return fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.movieTrailerBaseURL}/${movieId}?api_key=${_constants__WEBPACK_IMPORTED_MODULE_1__.api_key}`)
     .then(response => response.json())
     .then(movie => {
       console.log('Movie vote count >> ', movie.vote_count);
@@ -538,7 +538,7 @@ const getMovieVoteCount = movieId => {
 }
 
 const getMovieTrailerURL = movieId => {
-  return `${_constants__WEBPACK_IMPORTED_MODULE_1__.movieTrailerBaseURL}/${movieId}/videos?api_key=${api_key}&${language}`;
+  return `${_constants__WEBPACK_IMPORTED_MODULE_1__.movieTrailerBaseURL}/${movieId}/videos?api_key=${_constants__WEBPACK_IMPORTED_MODULE_1__.api_key}&${language}`;
 }
 
 const clearMovieSearch = () => {
@@ -650,7 +650,7 @@ const fetchMovies = (url, category) => fetch(url)
   });
 
 const postMovieRating = rating => {
-  fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.movieTrailerBaseURL}/${movieId}/rating?api_key=${api_key}&guest_session_id=${tmdbSession.session_id}`, {
+  fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.movieTrailerBaseURL}/${movieId}/rating?api_key=${_constants__WEBPACK_IMPORTED_MODULE_1__.api_key}&guest_session_id=${tmdbSession.session_id}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json;charset=utf-8',
@@ -673,9 +673,9 @@ const postMovieRating = rating => {
 
 getTMDBSession();
 
-fetchMovies(popularMoviesURL, 'popular');
+fetchMovies(_constants__WEBPACK_IMPORTED_MODULE_1__.popularMoviesURL, 'popular');
 
-fetchMovies(topRatedMoviesURL, 'rated');
+fetchMovies(_constants__WEBPACK_IMPORTED_MODULE_1__.topRatedMoviesURL, 'rated');
 })();
 
 /******/ })()
