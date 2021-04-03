@@ -11,6 +11,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "currentPage": () => (/* binding */ currentPage),
 /* harmony export */   "totalPages": () => (/* binding */ totalPages),
 /* harmony export */   "totalResults": () => (/* binding */ totalResults),
+/* harmony export */   "setCurrentPage": () => (/* binding */ setCurrentPage),
 /* harmony export */   "getTMDBSession": () => (/* binding */ getTMDBSession),
 /* harmony export */   "getMovieVoteCount": () => (/* binding */ getMovieVoteCount),
 /* harmony export */   "getMovieTrailerURL": () => (/* binding */ getMovieTrailerURL),
@@ -32,6 +33,11 @@ let movieId;
 let tmdbSession = {};
 let currentPage = 1;
 let totalPages, totalResults;
+
+const setCurrentPage = pageNo => {
+  currentPage = pageNo
+  return currentPage; 
+};
 
 const getTMDBSession = () => {
   return fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.theMovieDBURL}/authentication/guest_session/new?api_key=${_constants__WEBPACK_IMPORTED_MODULE_1__.api_key}`)
@@ -646,7 +652,7 @@ document.getElementById('search-button').addEventListener('click', () => {
         $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
           const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
           if (currentSlide + slidesToShow >= (10 * (_index__WEBPACK_IMPORTED_MODULE_0__.currentPage + 1))) {
-            fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${++_index__WEBPACK_IMPORTED_MODULE_0__.currentPage}`)
+            fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${(0,_index__WEBPACK_IMPORTED_MODULE_0__.setCurrentPage)(_index__WEBPACK_IMPORTED_MODULE_0__.currentPage + 1)}`)
               .then(response => response.json())
               .then(({ results }) => results.forEach(movie => {
                 $('#movie-search').slick('slickAdd', (0,_index__WEBPACK_IMPORTED_MODULE_0__.createMovieSlide)(movie));
