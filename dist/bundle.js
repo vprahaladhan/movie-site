@@ -41,12 +41,14 @@ const setCurrentPage = pageNo => {
 
 const getTMDBSession = () => {
   return fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.theMovieDBURL}/authentication/guest_session/new?api_key=${_constants__WEBPACK_IMPORTED_MODULE_1__.api_key}`)
-    .then(response => response.json())
+    .then(response => {
+      console.log('Response : session > ', response);
+      return response.json()
+    })
     .then(result => tmdbSession = result.success && {
       session_id: result.guest_session_id,
       expires_at: new Date(result.expires_at)
-    }
-    );
+    });
 };
 
 const getMovieVoteCount = movieId => {

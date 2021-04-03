@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack serve",
     "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1",
     "dev-server": "webpack serve"
   },
   "repository": {
@@ -25,5 +26,8 @@
     "webpack": "^5.30.0",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"
+  },
+  "engines": {
+    "node": "12.14.1"
   }
 }
