@@ -72,6 +72,7 @@ const displayMovieDetailsModal = (event, movie) => {
     document.getElementById(`like-${movie.id}`).classList.toggle('liked');
   };
 
+  movieId = movie.id;
   document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
 };
 
