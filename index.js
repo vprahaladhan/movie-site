@@ -55,11 +55,6 @@ const trailerClickEventListener = () => {
     });
 };
 
-// const playTrailer = (event, movie) => {
-//   movieId = movie.id;
-//   document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
-// };
-
 const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('movie-title').innerHTML = movie.title;
   document.getElementById('movie-poster').src = movie.poster_path ? moviePosterURL + movie.poster_path : 'assets/no-image.jpg';
