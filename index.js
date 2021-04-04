@@ -30,8 +30,9 @@ const clearMovieSearch = () => {
   const newMovieSearchDiv = document.createElement('div');
   newMovieSearchDiv.id = 'movie-search';
   newMovieSearchDiv.className = 'slick';
-  newMovieSearchDiv.style = 'width: 90%; margin: 0 auto;'
+  newMovieSearchDiv.style = 'width: 95%; margin: 0 auto;'
   document.getElementById('movie-search').replaceWith(newMovieSearchDiv);
+  currentPage = 1;
 };
 
 const trailerClickEventListener = () => {

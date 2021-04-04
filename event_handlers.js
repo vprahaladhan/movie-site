@@ -1,3 +1,5 @@
+let keyword = '';
+
 document.getElementById('modal-close').onclick = () => {
   if (document.getElementById('youtube-trailer')) {
     document.getElementById('movie-poster-container').innerHTML = `
@@ -7,24 +9,14 @@ document.getElementById('modal-close').onclick = () => {
 
 document.getElementById('search-button').addEventListener('click', () => {
   clearMovieSearch();
+  keyword = document.getElementById('search-keyword').value;
 
-  if (document.getElementById('search-keyword').value.length >= 1) {
-    const keyword = document.getElementById('search-keyword').value;
+  if (keyword.length >= 1) {
     fetchMovies(`${searchMoviesURL}&query=${keyword}&page=${currentPage}`, 'search')
       .then(() => {
-        $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
-          const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
-          if (currentSlide + slidesToShow >= (10 * (currentPage + 1))) {
-            fetch(`${searchMoviesURL}&query=${keyword}&page=${++currentPage}`)
-              .then(response => response.json())
-              .then(({ results }) => results.forEach(movie => {
-                $('#movie-search').slick('slickAdd', createMovieSlide(movie));
-              }));
-          }
-        });
         initializeSlick();
+        document.getElementById('search-keyword').value = '';
       });
-    document.getElementById('search-keyword').value = '';
   };
 });
 
@@ -54,7 +46,7 @@ const initializeSlick = () => {
     slidesToScroll: 5,
     arrows: true,
     lazyLoad: 'ondemand',
-    infinite: true,
+    infinite: false,
     dots: true,
     responsive: [
       {
@@ -90,5 +82,19 @@ const initializeSlick = () => {
         }
       }
     ]
+  });
+
+  $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
+    const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow');
+    if (nextSlide === (currentPage * 20 - slidesToShow)) {  
+      fetch(`${searchMoviesURL}&query=${keyword}&page=${++currentPage}`)
+        .then(response => {
+          console.log('response >>> ', response);
+          return response.json()
+        })
+        .then(({ results }) => results.forEach(movie => {
+          $('#movie-search').slick('slickAdd', createMovieSlide(movie));
+        }));
+    };
   });
 };
