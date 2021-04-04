@@ -68,7 +68,7 @@ const clearMovieSearch = () => {
   const newMovieSearchDiv = document.createElement('div');
   newMovieSearchDiv.id = 'movie-search';
   newMovieSearchDiv.className = 'slick';
-  newMovieSearchDiv.style = 'width: 90%; margin: 0 auto;'
+  newMovieSearchDiv.style = 'width: 95%; margin: 0 auto;'
   document.getElementById('movie-search').replaceWith(newMovieSearchDiv);
 };
 
@@ -724,7 +724,7 @@ const initializeSlick = () => {
 
   $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
     const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
-    if (nextSlide === (_index__WEBPACK_IMPORTED_MODULE_0__.currentPage * 20 - slidesToShow)) {
+    if (currentSlide === (_index__WEBPACK_IMPORTED_MODULE_0__.currentPage * 20 - slidesToShow)) {
       fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${(0,_index__WEBPACK_IMPORTED_MODULE_0__.setCurrentPage)(_index__WEBPACK_IMPORTED_MODULE_0__.currentPage + 1)}`)
         .then(response => response.json())
         .then(({ results }) => results.forEach(movie => {
