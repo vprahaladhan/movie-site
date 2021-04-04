@@ -6,10 +6,10 @@ import {  currentPage,
           getTMDBSession, 
           postMovieRating,
           fetchMovies } from './index';
-import { searchMoviesURL } from './constants'
+import { searchMoviesURL } from './constants';
+let keyword;
 
 document.getElementById('modal-close').onclick = () => {
-  console.log('Modal closing...');
   if (document.getElementById('youtube-trailer')) {
     document.getElementById('movie-poster-container').innerHTML = `
       <p><img id="movie-poster" src="#" alt="Movie Poster"></p>`;
@@ -18,24 +18,15 @@ document.getElementById('modal-close').onclick = () => {
 
 document.getElementById('search-button').addEventListener('click', () => {
   clearMovieSearch();
+  keyword = document.getElementById('search-keyword').value;
+  setCurrentPage(1);
 
   if (document.getElementById('search-keyword').value.length >= 1) {
-    const keyword = document.getElementById('search-keyword').value;
     fetchMovies(`${searchMoviesURL}&query=${keyword}&page=${currentPage}`, 'search')
       .then(() => {
-        $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
-          const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
-          if (currentSlide + slidesToShow >= (10 * (currentPage + 1))) {
-            fetch(`${searchMoviesURL}&query=${keyword}&page=${setCurrentPage(currentPage + 1)}`)
-              .then(response => response.json())
-              .then(({ results }) => results.forEach(movie => {
-                $('#movie-search').slick('slickAdd', createMovieSlide(movie));
-              }));
-          }
-        });
         initializeSlick();
+        document.getElementById('search-keyword').value = '';
       });
-    document.getElementById('search-keyword').value = '';
   };
 });
 
@@ -101,5 +92,16 @@ const initializeSlick = () => {
         }
       }
     ]
+  });
+
+  $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
+    const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
+    if (currentSlide === (currentPage * 20 - slidesToShow)) {
+      fetch(`${searchMoviesURL}&query=${keyword}&page=${setCurrentPage(currentPage + 1)}`)
+        .then(response => response.json())
+        .then(({ results }) => results.forEach(movie => {
+          $('#movie-search').slick('slickAdd', createMovieSlide(movie));
+        }));
+    }
   });
 };

@@ -635,9 +635,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
 
 
+let keyword;
 
 document.getElementById('modal-close').onclick = () => {
-  console.log('Modal closing...');
   if (document.getElementById('youtube-trailer')) {
     document.getElementById('movie-poster-container').innerHTML = `
       <p><img id="movie-poster" src="#" alt="Movie Poster"></p>`;
@@ -646,24 +646,15 @@ document.getElementById('modal-close').onclick = () => {
 
 document.getElementById('search-button').addEventListener('click', () => {
   (0,_index__WEBPACK_IMPORTED_MODULE_0__.clearMovieSearch)();
+  keyword = document.getElementById('search-keyword').value;
+  (0,_index__WEBPACK_IMPORTED_MODULE_0__.setCurrentPage)(1);
 
   if (document.getElementById('search-keyword').value.length >= 1) {
-    const keyword = document.getElementById('search-keyword').value;
     (0,_index__WEBPACK_IMPORTED_MODULE_0__.fetchMovies)(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${_index__WEBPACK_IMPORTED_MODULE_0__.currentPage}`, 'search')
       .then(() => {
-        $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
-          const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
-          if (currentSlide + slidesToShow >= (10 * (_index__WEBPACK_IMPORTED_MODULE_0__.currentPage + 1))) {
-            fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${(0,_index__WEBPACK_IMPORTED_MODULE_0__.setCurrentPage)(_index__WEBPACK_IMPORTED_MODULE_0__.currentPage + 1)}`)
-              .then(response => response.json())
-              .then(({ results }) => results.forEach(movie => {
-                $('#movie-search').slick('slickAdd', (0,_index__WEBPACK_IMPORTED_MODULE_0__.createMovieSlide)(movie));
-              }));
-          }
-        });
         initializeSlick();
+        document.getElementById('search-keyword').value = '';
       });
-    document.getElementById('search-keyword').value = '';
   };
 });
 
@@ -729,6 +720,17 @@ const initializeSlick = () => {
         }
       }
     ]
+  });
+
+  $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
+    const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
+    if (nextSlide === (_index__WEBPACK_IMPORTED_MODULE_0__.currentPage * 20 - slidesToShow)) {
+      fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${(0,_index__WEBPACK_IMPORTED_MODULE_0__.setCurrentPage)(_index__WEBPACK_IMPORTED_MODULE_0__.currentPage + 1)}`)
+        .then(response => response.json())
+        .then(({ results }) => results.forEach(movie => {
+          $('#movie-search').slick('slickAdd', (0,_index__WEBPACK_IMPORTED_MODULE_0__.createMovieSlide)(movie));
+        }));
+    }
   });
 };
 
