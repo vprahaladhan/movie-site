@@ -34,6 +34,8 @@ let tmdbSession = {};
 let currentPage = 1;
 let totalPages, totalResults;
 
+console.log(`Session URL > ${_constants__WEBPACK_IMPORTED_MODULE_1__.theMovieDBURL}/authentication/guest_session/new?api_key=${_constants__WEBPACK_IMPORTED_MODULE_1__.api_key}`);
+
 const setCurrentPage = pageNo => {
   currentPage = pageNo
   return currentPage; 
