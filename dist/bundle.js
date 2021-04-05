@@ -34,8 +34,6 @@ let tmdbSession = {};
 let currentPage = 1;
 let totalPages, totalResults;
 
-console.log("MISSING_ENV_VAR".NODE_ENV);
-
 const setCurrentPage = pageNo => {
   currentPage = pageNo
   return currentPage; 
