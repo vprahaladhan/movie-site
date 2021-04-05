@@ -608,7 +608,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "moviePosterURL": () => (/* binding */ moviePosterURL),
 /* harmony export */   "youtubeTrailerURL": () => (/* binding */ youtubeTrailerURL)
 /* harmony export */ });
-const api_key = "MISSING_ENV_VAR".TMDB_API_KEY;
+const api_key = "a2f05c95df66faa065b61cb42aae2c43";
 const language = 'language=en-US';
 
 const theMovieDBURL = 'https://api.themoviedb.org/3';
