@@ -1,4 +1,4 @@
-export const api_key = process.env.API_KEY;
+export const api_key = process.env.TMDB_API_KEY;
 export const language = 'language=en-US';
 
 export const theMovieDBURL = 'https://api.themoviedb.org/3';
