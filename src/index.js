@@ -7,7 +7,7 @@ export let tmdbSession = {};
 export let currentPage = 1;
 export let totalPages, totalResults;
 
-console.log(`Session URL > ${Utils.theMovieDBURL}/authentication/guest_session/new?api_key=${Utils.api_key}`);
+console.log(process.env.NODE_ENV);
 
 export const setCurrentPage = pageNo => {
   currentPage = pageNo
