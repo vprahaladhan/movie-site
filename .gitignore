@@ -6,3 +6,5 @@ index_2.js
 
 node_modules
 dist/
+
+.env
