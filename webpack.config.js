@@ -1,5 +1,6 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const webpack = require('webpack');
 
 module.exports = {
   "mode": "none",
@@ -27,6 +28,10 @@ module.exports = {
     ]
   },
   plugins: [
-    new Dotenv()
+    new Dotenv(),
+    new webpack.DefinePlugin({           
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),      
+      API_HOST: JSON.stringify(process.env.API_HOST)
+    })
   ]
 };
