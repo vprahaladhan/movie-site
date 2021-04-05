@@ -3,7 +3,7 @@ let express = require('express');
 
 const app = express();
 
-if (process.env.NODE_ENV == 'development') {
+if (process.env.NODE_ENV == 'production') {
   console.log('Deve mode? ', process.env.NODE_ENV);
   require('dotenv').config({ silent: true });
 }
