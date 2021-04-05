@@ -30,7 +30,7 @@ const clearMovieSearch = () => {
   const newMovieSearchDiv = document.createElement('div');
   newMovieSearchDiv.id = 'movie-search';
   newMovieSearchDiv.className = 'slick';
-  newMovieSearchDiv.style = 'width: 95%; margin: 0 auto;'
+  newMovieSearchDiv.style = 'width: 90%; margin: 0 auto;'
   document.getElementById('movie-search').replaceWith(newMovieSearchDiv);
   currentPage = 1;
 };
@@ -87,7 +87,7 @@ const createMovieSlide = movie => {
   trailer.style = 'border: 0; background: none; border-radius: 0px; cursor: pointer;'
 
   const moviePoster = document.createElement('img');
-  moviePoster.setAttribute('data-lazy', movie.poster_path ? movieImageURL + movie.poster_path : 'assets/no-image.jpg');
+  moviePoster.src = movie.poster_path ? movieImageURL + movie.poster_path : 'assets/no-image.jpg';
   moviePoster.alt = movie.title;
   
   const likeIcon = document.createElement('div');
