@@ -28,7 +28,9 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env": {},
+      "process.env": {
+        'TMDB_API_KEY': JSON.stringify(process.env.TMDB_API_KEY),
+      },
     })
   ]
 };
