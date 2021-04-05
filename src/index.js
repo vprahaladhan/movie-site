@@ -7,8 +7,6 @@ export let tmdbSession = {};
 export let currentPage = 1;
 export let totalPages, totalResults;
 
-console.log(process.env.NODE_ENV);
-
 export const setCurrentPage = pageNo => {
   currentPage = pageNo
   return currentPage; 
