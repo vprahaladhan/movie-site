@@ -9,3 +9,6 @@ const movieTrailerBaseURL = `${theMovieDBURL}/movie`;
 const movieImageURL = 'http://image.tmdb.org/t/p/w185';
 const moviePosterURL = 'http://image.tmdb.org/t/p/w342';
 const youtubeTrailerURL = 'https://www.youtube.com/embed';
+
+const unlikedIcon = '<i class="far fa-2x fa-thumbs-down"></i>';
+const likedIcon = '<i class="far fa-2x fa-thumbs-up"></i>';

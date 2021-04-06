@@ -76,7 +76,7 @@ body {
 /* The icon inside the overlay is positioned in the middle vertically and horizontally */
 .icon {
   color: white;
-  font-size: 20px;
+  /* font-size: 20px; */
   border-radius: 50%;
   background: none;
   position: absolute;
@@ -96,9 +96,9 @@ body {
   color: rgba(255, 182, 194, 0.849);
 } */
 
-.liked {
+/* .liked {
   color: pink;
-}
+} */
 
 .unliked {
   color: white;
