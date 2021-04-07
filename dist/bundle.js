@@ -101,15 +101,22 @@ const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('movie-overview').innerHTML = movie.overview;
   document.getElementById('release-date').innerHTML = `Released: ${movie.release_date}`;
   document.getElementById('average-vote').innerHTML = `Avg. vote: ${movie.vote_average}`;
-
-  if (document.getElementById(`like-${movie.id}`).className.includes('liked')) {
-    document.getElementById('like-icon').classList.add('liked');
-  }
+  document.getElementById('like-icon').innerHTML = document.getElementById(`like-${movie.id}`).innerHTML; 
 
   document.getElementById('like-icon').onclick = () => {
-    document.getElementById('like-icon').classList.toggle('liked');
-    document.getElementById(`like-${movie.id}`).classList.toggle('liked');
+    const likeIconState = document.getElementById(`like-icon`);
+    likeIconState.innerHTML = likeIconState.innerHTML.includes('down') ? _constants__WEBPACK_IMPORTED_MODULE_1__.likedIcon : _constants__WEBPACK_IMPORTED_MODULE_1__.unlikedIcon;
+    document.getElementById(`like-${movie.id}`).innerHTML = likeIconState.innerHTML;
   };
+
+  // if (document.getElementById(`like-${movie.id}`).className.includes('liked')) {
+  //   document.getElementById('like-icon').classList.add('liked');
+  // }
+
+  // document.getElementById('like-icon').onclick = () => {
+  //   document.getElementById('like-icon').classList.toggle('liked');
+  //   document.getElementById(`like-${movie.id}`).classList.toggle('liked');
+  // };
 
   movieId = movie.id;
   document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
@@ -117,6 +124,8 @@ const displayMovieDetailsModal = (event, movie) => {
 
 const createMovieSlide = movie => {
   const movieContainer = document.createElement('div');
+  movieContainer.setAttribute('liked', 'false');
+
   const movieInnerContainer = document.createElement('div');
   movieInnerContainer.className = 'container';
 
@@ -130,8 +139,8 @@ const createMovieSlide = movie => {
   
   const likeIcon = document.createElement('div');
   likeIcon.id = `like-${movie.id}`;
-  likeIcon.className = "btn btn-floating icon";
-  likeIcon.innerHTML = '<i class="fa fa-heart"></i>';
+  likeIcon.className = "icon";
+  likeIcon.innerHTML = _constants__WEBPACK_IMPORTED_MODULE_1__.likedIcon;
 
   trailer.appendChild(moviePoster);
   trailer.appendChild(likeIcon);
@@ -148,8 +157,14 @@ const createMovieSlide = movie => {
 
   likeIcon.addEventListener('click', event => {
     event.stopPropagation();
-    likeIcon.classList.toggle('liked');
+    likeIcon.innerHTML = likeIcon.innerHTML.includes('down') ? _constants__WEBPACK_IMPORTED_MODULE_1__.likedIcon : _constants__WEBPACK_IMPORTED_MODULE_1__.unlikedIcon;
+    movieContainer.setAttribute('liked', movieContainer.getAttribute('liked').includes('true') ? 'false' : 'true');
   });
+
+  // likeIcon.addEventListener('click', event => {
+  //   event.stopPropagation();
+  //   likeIcon.classList.toggle('liked');
+  // });
 
   return movieContainer;
 }
@@ -515,7 +530,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n  margin-left: 10px;\r\n}\r\n\r\n.slick-prev:before, .slick-next:before {\r\n  color: blue;\r\n}\r\n\r\n.slick-active {\r\n  text-align: center;\r\n}\r\n\r\n.modal-footer {\r\n  padding: 15px;\r\n  text-align: center;\r\n  border-top: 1px solid #e5e5e5;\r\n}\r\n\r\n.quick{\r\n  position: absolute;\r\n  left:0;\r\n  right:0;    \r\n  margin-top:-75%;\r\n  padding:0 5%;\r\n  width:100%;\r\n  background:blue;\r\n  display:none;\r\n}\r\n\r\n/* .outer:hover img{\r\n  border: 1px solid blue;\r\n}\r\n\r\n.outer:hover .quick{\r\n  display:block;\r\n} */\r\n\r\n/* Container needed to position the overlay. Adjust the width as needed */\r\n.container {\r\n  position: relative;\r\n  width: 100%;\r\n  max-width: 400px;\r\n  padding-right: 5px;\r\n  padding-left: 5px;\r\n}\r\n\r\n.container button {\r\n  padding-right: unset;\r\n  padding-left: unset;\r\n}\r\n\r\n/* Make the image to responsive */\r\n.image {\r\n  width: 100%;\r\n  height: auto;\r\n}\r\n\r\n/* The overlay effect (full height and width) - lays on top of the container and over the image */\r\n.overlay {\r\n  position: absolute;\r\n  top: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  right: 0;\r\n  height: 100%;\r\n  width: 100%;\r\n  opacity: 1;\r\n  transition: .3s ease;\r\n}\r\n\r\n/* When you mouse over the container, fade in the overlay icon*/\r\n/* .container:hover .overlay {\r\n  opacity: 1;\r\n} */\r\n\r\n/* The icon inside the overlay is positioned in the middle vertically and horizontally */\r\n.icon {\r\n  color: white;\r\n  font-size: 20px;\r\n  border-radius: 50%;\r\n  background: none;\r\n  position: absolute;\r\n  top: 8%;\r\n  left: 80%;\r\n  transform: translate(-50%, -50%);\r\n  -ms-transform: translate(-50%, -50%);\r\n  text-align: center;\r\n}\r\n\r\n/* When you move the mouse over the icon, change color */\r\n.liked {\r\n  color: rgba(255, 182, 194, 0.849);\r\n}\r\n\r\n/* .fa-heart:hover {\r\n  color: rgba(255, 182, 194, 0.849);\r\n} */\r\n\r\n.liked {\r\n  color: pink;\r\n}\r\n\r\n.unliked {\r\n  color: white;\r\n}\r\n\r\na:active, a:focus, a:visited {\r\n  outline: none;\r\n  text-decoration: none;\r\n  box-shadow: none;\r\n  border: none;\r\n  -moz-outline-style: none;\r\n}\r\n\r\n.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {\r\n  outline: none;\r\n}\r\n\r\n.show {\r\n  display: block;\r\n}\r\n\r\n.hide {\r\n  display: none;\r\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n  margin-left: 10px;\r\n}\r\n\r\n.slick-prev:before, .slick-next:before {\r\n  color: blue;\r\n}\r\n\r\n.slick-active {\r\n  text-align: center;\r\n}\r\n\r\n.modal-footer {\r\n  padding: 15px;\r\n  text-align: center;\r\n  border-top: 1px solid #e5e5e5;\r\n}\r\n\r\n.quick{\r\n  position: absolute;\r\n  left:0;\r\n  right:0;    \r\n  margin-top:-75%;\r\n  padding:0 5%;\r\n  width:100%;\r\n  background:blue;\r\n  display:none;\r\n}\r\n\r\n/* .outer:hover img{\r\n  border: 1px solid blue;\r\n}\r\n\r\n.outer:hover .quick{\r\n  display:block;\r\n} */\r\n\r\n/* Container needed to position the overlay. Adjust the width as needed */\r\n.container {\r\n  position: relative;\r\n  width: 100%;\r\n  max-width: 400px;\r\n  padding-right: 5px;\r\n  padding-left: 5px;\r\n}\r\n\r\n.container button {\r\n  padding-right: unset;\r\n  padding-left: unset;\r\n}\r\n\r\n/* Make the image to responsive */\r\n.image {\r\n  width: 100%;\r\n  height: auto;\r\n}\r\n\r\n/* The overlay effect (full height and width) - lays on top of the container and over the image */\r\n.overlay {\r\n  position: absolute;\r\n  top: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  right: 0;\r\n  height: 100%;\r\n  width: 100%;\r\n  opacity: 1;\r\n  transition: .3s ease;\r\n}\r\n\r\n/* When you mouse over the container, fade in the overlay icon*/\r\n/* .container:hover .overlay {\r\n  opacity: 1;\r\n} */\r\n\r\n/* The icon inside the overlay is positioned in the middle vertically and horizontally */\r\n.icon {\r\n  color: white;\r\n  /* font-size: 20px; */\r\n  border-radius: 50%;\r\n  background: none;\r\n  position: absolute;\r\n  top: 8%;\r\n  left: 80%;\r\n  transform: translate(-50%, -50%);\r\n  -ms-transform: translate(-50%, -50%);\r\n  text-align: center;\r\n}\r\n\r\n/* When you move the mouse over the icon, change color */\r\n.liked {\r\n  color: rgba(255, 182, 194, 0.849);\r\n}\r\n\r\n/* .fa-heart:hover {\r\n  color: rgba(255, 182, 194, 0.849);\r\n} */\r\n\r\n.liked {\r\n  color: pink;\r\n}\r\n\r\n.unliked {\r\n  color: white;\r\n}\r\n\r\na:active, a:focus, a:visited {\r\n  outline: none;\r\n  text-decoration: none;\r\n  box-shadow: none;\r\n  border: none;\r\n  -moz-outline-style: none;\r\n}\r\n\r\n.btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus {\r\n  outline: none;\r\n}\r\n\r\n.show {\r\n  display: block;\r\n}\r\n\r\n.hide {\r\n  display: none;\r\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -606,7 +621,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "movieTrailerBaseURL": () => (/* binding */ movieTrailerBaseURL),
 /* harmony export */   "movieImageURL": () => (/* binding */ movieImageURL),
 /* harmony export */   "moviePosterURL": () => (/* binding */ moviePosterURL),
-/* harmony export */   "youtubeTrailerURL": () => (/* binding */ youtubeTrailerURL)
+/* harmony export */   "youtubeTrailerURL": () => (/* binding */ youtubeTrailerURL),
+/* harmony export */   "unlikedIcon": () => (/* binding */ unlikedIcon),
+/* harmony export */   "likedIcon": () => (/* binding */ likedIcon)
 /* harmony export */ });
 const api_key = "a2f05c95df66faa065b61cb42aae2c43";
 const language = 'language=en-US';
@@ -619,6 +636,9 @@ const movieTrailerBaseURL = `${theMovieDBURL}/movie`;
 const movieImageURL = 'https://image.tmdb.org/t/p/w185';
 const moviePosterURL = 'https://image.tmdb.org/t/p/w342';
 const youtubeTrailerURL = 'https://www.youtube.com/embed';
+
+const unlikedIcon = '<i class="far fa-2x fa-thumbs-down"></i>';
+const likedIcon = '<i class="far fa-2x fa-thumbs-up"></i>';
 
 /***/ }),
 /* 6 */
@@ -678,6 +698,28 @@ document.getElementById('submit-rating').addEventListener('click', () => {
   };
 });
 
+document.getElementById('liked-filter').onclick = ({ target }) => {
+  if (target.innerText === 'Show Only Liked') {
+    $('#movie-search').slick('slickFilter','[liked="true"]');
+    target.innerText = 'Show All';
+  }
+  else {
+    $('#movie-search').slick('slickUnfilter');
+    target.innerText = 'Show Only Liked';
+  };
+}
+
+// document.getElementById('liked-filter').onclick = ({ target }) => {
+//   if (target.innerText === 'Show Only Liked') {
+//     $('.slick').slick('slickFilter','[liked="true"]');
+//     target.innerText = 'Show All';
+//   }
+//   else {
+//     $('.slick').slick('slickUnfilter');
+//     target.innerText = 'Show Only Liked';
+//   };
+// }
+
 const initializeSlick = () => {
   $('#movie-search').slick({
     slidesToShow: 5,
@@ -724,7 +766,7 @@ const initializeSlick = () => {
 
   $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
     const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
-    if (currentSlide === (_index__WEBPACK_IMPORTED_MODULE_0__.currentPage * 20 - slidesToShow)) {
+    if (nextSlide === (_index__WEBPACK_IMPORTED_MODULE_0__.currentPage * 20 - slidesToShow)) {
       fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${(0,_index__WEBPACK_IMPORTED_MODULE_0__.setCurrentPage)(_index__WEBPACK_IMPORTED_MODULE_0__.currentPage + 1)}`)
         .then(response => response.json())
         .then(({ results }) => results.forEach(movie => {
