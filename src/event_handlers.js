@@ -50,6 +50,28 @@ document.getElementById('submit-rating').addEventListener('click', () => {
   };
 });
 
+document.getElementById('liked-filter').onclick = ({ target }) => {
+  if (target.innerText === 'Show Only Liked') {
+    $('#movie-search').slick('slickFilter','[liked="true"]');
+    target.innerText = 'Show All';
+  }
+  else {
+    $('#movie-search').slick('slickUnfilter');
+    target.innerText = 'Show Only Liked';
+  };
+}
+
+// document.getElementById('liked-filter').onclick = ({ target }) => {
+//   if (target.innerText === 'Show Only Liked') {
+//     $('.slick').slick('slickFilter','[liked="true"]');
+//     target.innerText = 'Show All';
+//   }
+//   else {
+//     $('.slick').slick('slickUnfilter');
+//     target.innerText = 'Show Only Liked';
+//   };
+// }
+
 const initializeSlick = () => {
   $('#movie-search').slick({
     slidesToShow: 5,
@@ -96,7 +118,7 @@ const initializeSlick = () => {
 
   $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
     const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
-    if (currentSlide === (currentPage * 20 - slidesToShow)) {
+    if (nextSlide === (currentPage * 20 - slidesToShow)) {
       fetch(`${searchMoviesURL}&query=${keyword}&page=${setCurrentPage(currentPage + 1)}`)
         .then(response => response.json())
         .then(({ results }) => results.forEach(movie => {

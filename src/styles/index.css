@@ -76,7 +76,7 @@ body {
 /* The icon inside the overlay is positioned in the middle vertically and horizontally */
 .icon {
   color: white;
-  font-size: 20px;
+  /* font-size: 20px; */
   border-radius: 50%;
   background: none;
   position: absolute;

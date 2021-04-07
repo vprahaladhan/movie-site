@@ -74,15 +74,22 @@ export const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('movie-overview').innerHTML = movie.overview;
   document.getElementById('release-date').innerHTML = `Released: ${movie.release_date}`;
   document.getElementById('average-vote').innerHTML = `Avg. vote: ${movie.vote_average}`;
-
-  if (document.getElementById(`like-${movie.id}`).className.includes('liked')) {
-    document.getElementById('like-icon').classList.add('liked');
-  }
+  document.getElementById('like-icon').innerHTML = document.getElementById(`like-${movie.id}`).innerHTML; 
 
   document.getElementById('like-icon').onclick = () => {
-    document.getElementById('like-icon').classList.toggle('liked');
-    document.getElementById(`like-${movie.id}`).classList.toggle('liked');
+    const likeIconState = document.getElementById(`like-icon`);
+    likeIconState.innerHTML = likeIconState.innerHTML.includes('down') ? Utils.likedIcon : Utils.unlikedIcon;
+    document.getElementById(`like-${movie.id}`).innerHTML = likeIconState.innerHTML;
   };
+
+  // if (document.getElementById(`like-${movie.id}`).className.includes('liked')) {
+  //   document.getElementById('like-icon').classList.add('liked');
+  // }
+
+  // document.getElementById('like-icon').onclick = () => {
+  //   document.getElementById('like-icon').classList.toggle('liked');
+  //   document.getElementById(`like-${movie.id}`).classList.toggle('liked');
+  // };
 
   movieId = movie.id;
   document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
@@ -90,6 +97,8 @@ export const displayMovieDetailsModal = (event, movie) => {
 
 export const createMovieSlide = movie => {
   const movieContainer = document.createElement('div');
+  movieContainer.setAttribute('liked', 'false');
+
   const movieInnerContainer = document.createElement('div');
   movieInnerContainer.className = 'container';
 
@@ -103,8 +112,8 @@ export const createMovieSlide = movie => {
   
   const likeIcon = document.createElement('div');
   likeIcon.id = `like-${movie.id}`;
-  likeIcon.className = "btn btn-floating icon";
-  likeIcon.innerHTML = '<i class="fa fa-heart"></i>';
+  likeIcon.className = "icon";
+  likeIcon.innerHTML = Utils.likedIcon;
 
   trailer.appendChild(moviePoster);
   trailer.appendChild(likeIcon);
@@ -121,8 +130,14 @@ export const createMovieSlide = movie => {
 
   likeIcon.addEventListener('click', event => {
     event.stopPropagation();
-    likeIcon.classList.toggle('liked');
+    likeIcon.innerHTML = likeIcon.innerHTML.includes('down') ? Utils.likedIcon : Utils.unlikedIcon;
+    movieContainer.setAttribute('liked', movieContainer.getAttribute('liked').includes('true') ? 'false' : 'true');
   });
+
+  // likeIcon.addEventListener('click', event => {
+  //   event.stopPropagation();
+  //   likeIcon.classList.toggle('liked');
+  // });
 
   return movieContainer;
 }
