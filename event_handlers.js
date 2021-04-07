@@ -40,6 +40,28 @@ document.getElementById('submit-rating').addEventListener('click', () => {
   };
 });
 
+document.getElementById('liked-filter').onclick = ({ target }) => {
+  if (target.innerText === 'Show Only Liked') {
+    $('#movie-search').slick('slickFilter','[liked="true"]');
+    target.innerText = 'Show All';
+  }
+  else {
+    $('#movie-search').slick('slickUnfilter');
+    target.innerText = 'Show Only Liked';
+  }
+}
+
+// document.getElementById('liked-filter').onclick = ({ target }) => {
+//   if (target.innerText === 'Show Only Liked') {
+//     $('.slick').slick('slickFilter','[liked="true"]');
+//     target.innerText = 'Show All';
+//   }
+//   else {
+//     $('.slick').slick('slickUnfilter');
+//     target.innerText = 'Show Only Liked';
+//   };
+// }
+
 const initializeSlick = () => {
   $('#movie-search').slick({
     slidesToShow: 5,
@@ -88,10 +110,7 @@ const initializeSlick = () => {
     const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow');
     if (nextSlide === (currentPage * 20 - slidesToShow)) {  
       fetch(`${searchMoviesURL}&query=${keyword}&page=${++currentPage}`)
-        .then(response => {
-          console.log('response >>> ', response);
-          return response.json()
-        })
+        .then(response => response.json())
         .then(({ results }) => results.forEach(movie => {
           $('#movie-search').slick('slickAdd', createMovieSlide(movie));
         }));

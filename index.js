@@ -77,6 +77,8 @@ const displayMovieDetailsModal = (event, movie) => {
 
 const createMovieSlide = movie => {
   const movieContainer = document.createElement('div');
+  movieContainer.setAttribute('liked', 'false');
+ 
   const movieInnerContainer = document.createElement('div');
   movieInnerContainer.className = 'container';
 
@@ -109,6 +111,7 @@ const createMovieSlide = movie => {
   likeIcon.addEventListener('click', event => {
     event.stopPropagation();
     likeIcon.innerHTML = likeIcon.innerHTML.includes('down') ? likedIcon : unlikedIcon;
+    movieContainer.setAttribute('liked', movieContainer.getAttribute('liked').includes('true') ? 'false' : 'true');
   });
 
   return movieContainer;
