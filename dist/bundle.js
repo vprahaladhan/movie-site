@@ -1,7 +1,8 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ([
-/* 0 */
+/* 0 */,
+/* 1 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -22,13 +23,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "fetchMovies": () => (/* binding */ fetchMovies),
 /* harmony export */   "postMovieRating": () => (/* binding */ postMovieRating)
 /* harmony export */ });
-/* harmony import */ var _styles_index_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-/* harmony import */ var _assets_no_image_jpg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(6);
+/* harmony import */ var _styles_index_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+/* harmony import */ var _assets_no_image_jpg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(7);
 
 
 
-// import initializeSlick from './initialize_slick';
 
 let movieId;
 let tmdbSession = {};
@@ -110,15 +110,6 @@ const displayMovieDetailsModal = (event, movie) => {
     document.getElementById(`like-${movie.id}`).innerHTML = likeIconState.innerHTML;
   };
 
-  // if (document.getElementById(`like-${movie.id}`).className.includes('liked')) {
-  //   document.getElementById('like-icon').classList.add('liked');
-  // }
-
-  // document.getElementById('like-icon').onclick = () => {
-  //   document.getElementById('like-icon').classList.toggle('liked');
-  //   document.getElementById(`like-${movie.id}`).classList.toggle('liked');
-  // };
-
   movieId = movie.id;
   document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
 };
@@ -161,11 +152,6 @@ const createMovieSlide = movie => {
     likeIcon.innerHTML = likeIcon.innerHTML.includes('down') ? _constants__WEBPACK_IMPORTED_MODULE_1__.likedIcon : _constants__WEBPACK_IMPORTED_MODULE_1__.unlikedIcon;
     movieContainer.setAttribute('liked', movieContainer.getAttribute('liked').includes('true') ? 'false' : 'true');
   });
-
-  // likeIcon.addEventListener('click', event => {
-  //   event.stopPropagation();
-  //   likeIcon.classList.toggle('liked');
-  // });
 
   return movieContainer;
 }
@@ -214,21 +200,25 @@ const postMovieRating = rating => {
 
 getTMDBSession();
 
-fetchMovies(_constants__WEBPACK_IMPORTED_MODULE_1__.popularMoviesURL, 'popular');
-
-fetchMovies(_constants__WEBPACK_IMPORTED_MODULE_1__.topRatedMoviesURL, 'rated').then(() => _constants__WEBPACK_IMPORTED_MODULE_1__.initializeSlick('.slick'));
+fetchMovies(_constants__WEBPACK_IMPORTED_MODULE_1__.popularMoviesURL, 'popular')
+  .then(() => {
+    fetchMovies(_constants__WEBPACK_IMPORTED_MODULE_1__.topRatedMoviesURL, 'rated')
+      .then(() => {
+        _constants__WEBPACK_IMPORTED_MODULE_1__.initializeSlick('.slick')
+      });
+  });
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_index_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(3);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_index_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 
             
 
@@ -244,7 +234,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_index_css__WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 
@@ -518,14 +508,14 @@ module.exports = function (list, options) {
 };
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
 /* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
 // Imports
 
@@ -537,7 +527,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "body {\r\n  margin-left: 10px;\r\n}\r\
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ ((module) => {
 
 
@@ -608,7 +598,7 @@ module.exports = function (cssWithMappingToString) {
 };
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -689,99 +679,10 @@ const initializeSlick = element => {
 };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 module.exports = __webpack_require__.p + "f1982b89a5bcdd4c0fc1.jpg";
-
-/***/ }),
-/* 7 */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(0);
-/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(5);
-
-
-let keyword;
-
-document.getElementById('modal-close').onclick = () => {
-  if (document.getElementById('youtube-trailer')) {
-    document.getElementById('movie-poster-container').innerHTML = `
-      <p><img id="movie-poster" src="#" alt="Movie Poster"></p>`;
-  };
-};
-
-document.getElementById('search-button').addEventListener('click', () => {
-  (0,_index__WEBPACK_IMPORTED_MODULE_0__.clearMovieSearch)();
-  keyword = document.getElementById('search-keyword').value;
-  (0,_index__WEBPACK_IMPORTED_MODULE_0__.setCurrentPage)(1);
-
-  if (document.getElementById('search-keyword').value.length >= 1) {
-    (0,_index__WEBPACK_IMPORTED_MODULE_0__.fetchMovies)(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${_index__WEBPACK_IMPORTED_MODULE_0__.currentPage}`, 'search')
-      .then(() => {
-        initSlick();
-        document.getElementById('search-keyword').value = '';
-      });
-  };
-});
-
-document.getElementById('movie-rating').addEventListener('input', () => {
-  const rating = Number(document.getElementById('movie-rating').value);
-
-  if (isNaN(rating) || rating < 0.5 || rating > 10.0) {
-    document.getElementById('submit-rating').disabled = true;
-  }
-  else document.getElementById('submit-rating').disabled = false;
-});
-
-document.getElementById('submit-rating').addEventListener('click', () => {
-  const rating = Number(document.getElementById('movie-rating').value);
-  if (_index__WEBPACK_IMPORTED_MODULE_0__.tmdbSession.session_id && _index__WEBPACK_IMPORTED_MODULE_0__.tmdbSession.expires_at > new Date()) {
-    (0,_index__WEBPACK_IMPORTED_MODULE_0__.postMovieRating)(rating);
-  }
-  else {
-    (0,_index__WEBPACK_IMPORTED_MODULE_0__.getTMDBSession)()
-      .then(() => (0,_index__WEBPACK_IMPORTED_MODULE_0__.postMovieRating)(rating))
-  };
-});
-
-document.getElementById('liked-filter').onclick = ({ target }) => {
-  if (target.innerText === 'Show Only Liked') {
-    $('#movie-search').slick('slickFilter','[liked="true"]');
-    target.innerText = 'Show All';
-  }
-  else {
-    $('#movie-search').slick('slickUnfilter');
-    target.innerText = 'Show Only Liked';
-  };
-}
-
-// document.getElementById('liked-filter').onclick = ({ target }) => {
-//   if (target.innerText === 'Show Only Liked') {
-//     $('.slick').slick('slickFilter','[liked="true"]');
-//     target.innerText = 'Show All';
-//   }
-//   else {
-//     $('.slick').slick('slickUnfilter');
-//     target.innerText = 'Show Only Liked';
-//   };
-// }
-
-const initSlick = () => {
-  ;(0,_constants__WEBPACK_IMPORTED_MODULE_1__.initializeSlick)('#movie-search');
-
-  $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
-    const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
-    if (nextSlide === (_index__WEBPACK_IMPORTED_MODULE_0__.currentPage * 20 - slidesToShow)) {
-      fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${(0,_index__WEBPACK_IMPORTED_MODULE_0__.setCurrentPage)(_index__WEBPACK_IMPORTED_MODULE_0__.currentPage + 1)}`)
-        .then(response => response.json())
-        .then(({ results }) => results.forEach(movie => {
-          $('#movie-search').slick('slickAdd', (0,_index__WEBPACK_IMPORTED_MODULE_0__.createMovieSlide)(movie));
-        }));
-    }
-  });
-};
 
 /***/ })
 /******/ 	]);
@@ -884,12 +785,94 @@ const initSlick = () => {
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	__webpack_require__(0);
-/******/ 	var __webpack_exports__ = __webpack_require__(7);
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
+
+
+let keyword;
+
+document.getElementById('modal-close').onclick = () => {
+  if (document.getElementById('youtube-trailer')) {
+    document.getElementById('movie-poster-container').innerHTML = `
+      <p><img id="movie-poster" src="#" alt="Movie Poster"></p>`;
+  };
+};
+
+document.getElementById('search-button').addEventListener('click', () => {
+  (0,_index__WEBPACK_IMPORTED_MODULE_0__.clearMovieSearch)();
+  keyword = document.getElementById('search-keyword').value;
+  (0,_index__WEBPACK_IMPORTED_MODULE_0__.setCurrentPage)(1);
+
+  if (document.getElementById('search-keyword').value.length >= 1) {
+    (0,_index__WEBPACK_IMPORTED_MODULE_0__.fetchMovies)(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${_index__WEBPACK_IMPORTED_MODULE_0__.currentPage}`, 'search')
+      .then(() => {
+        initSlick();
+        document.getElementById('search-keyword').value = '';
+      });
+  };
+});
+
+document.getElementById('movie-rating').addEventListener('input', () => {
+  const rating = Number(document.getElementById('movie-rating').value);
+
+  if (isNaN(rating) || rating < 0.5 || rating > 10.0) {
+    document.getElementById('submit-rating').disabled = true;
+  }
+  else document.getElementById('submit-rating').disabled = false;
+});
+
+document.getElementById('submit-rating').addEventListener('click', () => {
+  const rating = Number(document.getElementById('movie-rating').value);
+  if (_index__WEBPACK_IMPORTED_MODULE_0__.tmdbSession.session_id && _index__WEBPACK_IMPORTED_MODULE_0__.tmdbSession.expires_at > new Date()) {
+    (0,_index__WEBPACK_IMPORTED_MODULE_0__.postMovieRating)(rating);
+  }
+  else {
+    (0,_index__WEBPACK_IMPORTED_MODULE_0__.getTMDBSession)()
+      .then(() => (0,_index__WEBPACK_IMPORTED_MODULE_0__.postMovieRating)(rating))
+  };
+});
+
+document.getElementById('liked-filter').onclick = ({ target }) => {
+  if (target.innerText === 'Show Only Liked') {
+    $('#movie-search').slick('slickFilter','[liked="true"]');
+    target.innerText = 'Show All';
+  }
+  else {
+    $('#movie-search').slick('slickUnfilter');
+    target.innerText = 'Show Only Liked';
+  };
+}
+
+// document.getElementById('liked-filter').onclick = ({ target }) => {
+//   if (target.innerText === 'Show Only Liked') {
+//     $('.slick').slick('slickFilter','[liked="true"]');
+//     target.innerText = 'Show All';
+//   }
+//   else {
+//     $('.slick').slick('slickUnfilter');
+//     target.innerText = 'Show Only Liked';
+//   };
+// }
+
+const initSlick = () => {
+  ;(0,_constants__WEBPACK_IMPORTED_MODULE_1__.initializeSlick)('#movie-search');
+
+  $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
+    const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
+    if (nextSlide === (_index__WEBPACK_IMPORTED_MODULE_0__.currentPage * 20 - slidesToShow)) {
+      fetch(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${(0,_index__WEBPACK_IMPORTED_MODULE_0__.setCurrentPage)(_index__WEBPACK_IMPORTED_MODULE_0__.currentPage + 1)}`)
+        .then(response => response.json())
+        .then(({ results }) => results.forEach(movie => {
+          $('#movie-search').slick('slickAdd', (0,_index__WEBPACK_IMPORTED_MODULE_0__.createMovieSlide)(movie));
+        }));
+    }
+  });
+};
+})();
+
 /******/ })()
 ;

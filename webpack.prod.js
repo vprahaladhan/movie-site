@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 module.exports = {
   "mode": "none",
-  "entry": ['./src/index.js', './src/event_handlers.js'],
+  "entry": ['./src/event_handlers.js'],
   "output": {
     "path": __dirname + '/dist',
     "filename": "bundle.js"
