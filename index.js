@@ -161,7 +161,10 @@ const postMovieRating = rating => {
 
 getTMDBSession();
 
-fetchMovies(popularMoviesURL, 'popular');
-
-fetchMovies(topRatedMoviesURL, 'rated')
-  .then(() => initializeSlick('.slick'));
+fetchMovies(popularMoviesURL, 'popular')
+  .then(() => {
+    fetchMovies(topRatedMoviesURL, 'rated')
+      .then(() => {
+        initializeSlick('.slick')
+      })
+  });
