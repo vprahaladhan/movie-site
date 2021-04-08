@@ -1,6 +1,6 @@
 import './styles/index.css';
 import * as Utils from './constants';
-import noImage from './assets/no-image.jpg'
+import noImage from './assets/no-image.jpg';
 
 export let movieId;
 export let tmdbSession = {};
@@ -82,15 +82,6 @@ export const displayMovieDetailsModal = (event, movie) => {
     document.getElementById(`like-${movie.id}`).innerHTML = likeIconState.innerHTML;
   };
 
-  // if (document.getElementById(`like-${movie.id}`).className.includes('liked')) {
-  //   document.getElementById('like-icon').classList.add('liked');
-  // }
-
-  // document.getElementById('like-icon').onclick = () => {
-  //   document.getElementById('like-icon').classList.toggle('liked');
-  //   document.getElementById(`like-${movie.id}`).classList.toggle('liked');
-  // };
-
   movieId = movie.id;
   document.getElementById('trailer').addEventListener('click', trailerClickEventListener);
 };
@@ -133,11 +124,6 @@ export const createMovieSlide = movie => {
     likeIcon.innerHTML = likeIcon.innerHTML.includes('down') ? Utils.likedIcon : Utils.unlikedIcon;
     movieContainer.setAttribute('liked', movieContainer.getAttribute('liked').includes('true') ? 'false' : 'true');
   });
-
-  // likeIcon.addEventListener('click', event => {
-  //   event.stopPropagation();
-  //   likeIcon.classList.toggle('liked');
-  // });
 
   return movieContainer;
 }
@@ -188,4 +174,4 @@ getTMDBSession();
 
 fetchMovies(Utils.popularMoviesURL, 'popular');
 
-fetchMovies(Utils.topRatedMoviesURL, 'rated');
+fetchMovies(Utils.topRatedMoviesURL, 'rated').then(() => Utils.initializeSlick('.slick'));

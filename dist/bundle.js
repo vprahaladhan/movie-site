@@ -28,6 +28,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+// import initializeSlick from './initialize_slick';
 
 let movieId;
 let tmdbSession = {};
@@ -215,7 +216,7 @@ getTMDBSession();
 
 fetchMovies(_constants__WEBPACK_IMPORTED_MODULE_1__.popularMoviesURL, 'popular');
 
-fetchMovies(_constants__WEBPACK_IMPORTED_MODULE_1__.topRatedMoviesURL, 'rated');
+fetchMovies(_constants__WEBPACK_IMPORTED_MODULE_1__.topRatedMoviesURL, 'rated').then(() => _constants__WEBPACK_IMPORTED_MODULE_1__.initializeSlick('.slick'));
 
 /***/ }),
 /* 1 */
@@ -623,7 +624,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "moviePosterURL": () => (/* binding */ moviePosterURL),
 /* harmony export */   "youtubeTrailerURL": () => (/* binding */ youtubeTrailerURL),
 /* harmony export */   "unlikedIcon": () => (/* binding */ unlikedIcon),
-/* harmony export */   "likedIcon": () => (/* binding */ likedIcon)
+/* harmony export */   "likedIcon": () => (/* binding */ likedIcon),
+/* harmony export */   "initializeSlick": () => (/* binding */ initializeSlick)
 /* harmony export */ });
 const api_key = "a2f05c95df66faa065b61cb42aae2c43";
 const language = 'language=en-US';
@@ -639,6 +641,52 @@ const youtubeTrailerURL = 'https://www.youtube.com/embed';
 
 const unlikedIcon = '<i class="far fa-2x fa-thumbs-down"></i>';
 const likedIcon = '<i class="far fa-2x fa-thumbs-up"></i>';
+
+const initializeSlick = element => {
+  $(element).slick({
+    slidesToShow: 5,
+    slidesToScroll: 5,
+    lazyLoad: 'ondemand',
+    arrows: true,
+    infinite: false,
+    dots: true,
+    responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 4,
+          slidesToScroll: 4,
+          infinite: false,
+          dots: true
+        }
+      },
+      {
+        breakpoint: 884,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          dots: false
+        }
+      },
+      {
+        breakpoint: 650,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          dots: false
+        }
+      },
+      {
+        breakpoint: 450,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          dots: false
+        }
+      }
+    ]
+  });
+};
 
 /***/ }),
 /* 6 */
@@ -672,7 +720,7 @@ document.getElementById('search-button').addEventListener('click', () => {
   if (document.getElementById('search-keyword').value.length >= 1) {
     (0,_index__WEBPACK_IMPORTED_MODULE_0__.fetchMovies)(`${_constants__WEBPACK_IMPORTED_MODULE_1__.searchMoviesURL}&query=${keyword}&page=${_index__WEBPACK_IMPORTED_MODULE_0__.currentPage}`, 'search')
       .then(() => {
-        initializeSlick();
+        initSlick();
         document.getElementById('search-keyword').value = '';
       });
   };
@@ -720,49 +768,8 @@ document.getElementById('liked-filter').onclick = ({ target }) => {
 //   };
 // }
 
-const initializeSlick = () => {
-  $('#movie-search').slick({
-    slidesToShow: 5,
-    slidesToScroll: 5,
-    arrows: true,
-    lazyLoad: 'ondemand',
-    infinite: true,
-    dots: true,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 4,
-          dots: true
-        }
-      },
-      {
-        breakpoint: 884,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          dots: false
-        }
-      },
-      {
-        breakpoint: 650,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          dots: false
-        }
-      },
-      {
-        breakpoint: 450,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          dots: false
-        }
-      }
-    ]
-  });
+const initSlick = () => {
+  ;(0,_constants__WEBPACK_IMPORTED_MODULE_1__.initializeSlick)('#movie-search');
 
   $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
     const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow') * 2;
