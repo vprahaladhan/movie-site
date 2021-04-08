@@ -6,8 +6,8 @@ const searchMoviesURL = `${theMovieDBURL}/search/movie?api_key=${api_key}&${lang
 const popularMoviesURL = `${theMovieDBURL}/movie/popular?api_key=${api_key}&${language}&page=1`;
 const topRatedMoviesURL = `${theMovieDBURL}/movie/top_rated?api_key=${api_key}&${language}&page=1`;
 const movieTrailerBaseURL = `${theMovieDBURL}/movie`;
-const movieImageURL = 'http://image.tmdb.org/t/p/w185';
-const moviePosterURL = 'http://image.tmdb.org/t/p/w342';
+const movieImageURL = 'https://image.tmdb.org/t/p/w185';
+const moviePosterURL = 'https://image.tmdb.org/t/p/w342';
 const youtubeTrailerURL = 'https://www.youtube.com/embed';
 
 const unlikedIcon = '<i class="far fa-2x fa-thumbs-down"></i>';
