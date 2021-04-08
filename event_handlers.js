@@ -14,7 +14,7 @@ document.getElementById('search-button').addEventListener('click', () => {
   if (keyword.length >= 1) {
     fetchMovies(`${searchMoviesURL}&query=${keyword}&page=${currentPage}`, 'search')
       .then(() => {
-        initializeSlick();
+        initSlick();
         document.getElementById('search-keyword').value = '';
       });
   };
@@ -62,49 +62,8 @@ document.getElementById('liked-filter').onclick = ({ target }) => {
 //   };
 // }
 
-const initializeSlick = () => {
-  $('#movie-search').slick({
-    slidesToShow: 5,
-    slidesToScroll: 5,
-    arrows: true,
-    lazyLoad: 'ondemand',
-    infinite: false,
-    dots: true,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 4,
-          slidesToScroll: 4,
-          dots: true
-        }
-      },
-      {
-        breakpoint: 884,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          dots: false
-        }
-      },
-      {
-        breakpoint: 650,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          dots: false
-        }
-      },
-      {
-        breakpoint: 450,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          dots: false
-        }
-      }
-    ]
-  });
+const initSlick = () => {
+  initializeSlick('#movie-search');
 
   $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
     const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow');

@@ -163,4 +163,5 @@ getTMDBSession();
 
 fetchMovies(popularMoviesURL, 'popular');
 
-fetchMovies(topRatedMoviesURL, 'rated');
+fetchMovies(topRatedMoviesURL, 'rated')
+  .then(() => initializeSlick('.slick'));
