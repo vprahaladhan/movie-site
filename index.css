@@ -2,6 +2,22 @@ body {
   margin-left: 10px;
 }
 
+.movie-title {
+  position: absolute;
+  color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2em;
+}
+
+.poster-container {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+
 .slick-prev:before, .slick-next:before {
   color: blue;
 }

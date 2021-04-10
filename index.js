@@ -26,12 +26,28 @@ const getMovieTrailerURL = movieId => {
   return `${movieTrailerBaseURL}/${movieId}/videos?api_key=${api_key}&${language}`;
 }
 
+const initSlick = () => {
+  initializeSlick('#movie-search');
+
+  $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
+    const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow');
+    if (nextSlide === (currentPage * 20 - slidesToShow)) {  
+      fetch(`${searchMoviesURL}&query=${keyword}&page=${++currentPage}`)
+        .then(response => response.json())
+        .then(({ results }) => results.forEach(movie => {
+          $('#movie-search').slick('slickAdd', createMovieSlide(movie));
+        }));
+    };
+  });
+};
+
 const clearMovieSearch = () => {
   const newMovieSearchDiv = document.createElement('div');
   newMovieSearchDiv.id = 'movie-search';
   newMovieSearchDiv.className = 'slick';
   newMovieSearchDiv.style = 'width: 90%; margin: 0 auto;'
   document.getElementById('movie-search').replaceWith(newMovieSearchDiv);
+  initSlick();
   currentPage = 1;
 };
 
@@ -56,7 +72,7 @@ const trailerClickEventListener = () => {
     });
 };
 
-const displayMovieDetailsModal = (event, movie) => {
+const displayMovieDetailsModal = (movie, movieContainer) => {
   document.getElementById('movie-title').innerHTML = movie.title;
   document.getElementById('movie-poster').src = movie.poster_path ? moviePosterURL + movie.poster_path : 'assets/no-image.jpg';
   document.getElementById('movie-poster').alt = movie.title;
@@ -65,10 +81,11 @@ const displayMovieDetailsModal = (event, movie) => {
   document.getElementById('average-vote').innerHTML = `Avg. vote: ${movie.vote_average}`;
   document.getElementById('like-icon').innerHTML = document.getElementById(`like-${movie.id}`).innerHTML; 
 
-  document.getElementById('like-icon').onclick = event => {
+  document.getElementById('like-icon').onclick = () => {
     const likeIconState = document.getElementById(`like-icon`);
     likeIconState.innerHTML = likeIconState.innerHTML.includes('down') ? likedIcon : unlikedIcon;
     document.getElementById(`like-${movie.id}`).innerHTML = likeIconState.innerHTML;
+    movieContainer.setAttribute('liked', movieContainer.getAttribute('liked').includes('true') ? 'false' : 'true');
   };
 
   movieId = movie.id;
@@ -89,6 +106,12 @@ const createMovieSlide = movie => {
   const moviePoster = document.createElement('img');
   moviePoster.src = movie.poster_path ? movieImageURL + movie.poster_path : 'assets/no-image.jpg';
   moviePoster.alt = movie.title;
+  if (!movie.poster_path) {
+    const movieTitle = document.createElement('div');
+    movieTitle.className = 'movie-title';
+    movieTitle.innerHTML = movie.title;
+    trailer.appendChild(movieTitle);
+  }
   
   const likeIcon = document.createElement('div');
   likeIcon.id = `like-${movie.id}`;
@@ -105,7 +128,7 @@ const createMovieSlide = movie => {
     if (document.getElementById('trailer').disabled) {
       document.getElementById('trailer').disabled = false;
     };
-    displayMovieDetailsModal(event, movie);
+    displayMovieDetailsModal(movie, movieContainer);
   });
 
   likeIcon.addEventListener('click', event => {
@@ -127,13 +150,12 @@ const fetchMovies = (url, category) => fetch(url)
     };
 
     response.results.forEach(movie => {
-      let searchByCategory = '';
+      console.log('Movie search >> ', $('#movie-search'));
       switch (category) {
-        case 'search': searchByCategory = 'movie-search'; break;
-        case 'rated': searchByCategory = 'top-rated'; break;
-        case 'popular': searchByCategory = 'most-popular'; break;
-      }
-      document.getElementById(searchByCategory).appendChild(createMovieSlide(movie));
+        case 'search':  $('#movie-search').slick('slickAdd', createMovieSlide(movie)); break;
+        case 'rated':   $('#top-rated').slick('slickAdd', createMovieSlide(movie)); break;
+        case 'popular': $('#most-popular').slick('slickAdd', createMovieSlide(movie)); break;
+      }     
     });
   });
 
@@ -159,12 +181,10 @@ const postMovieRating = rating => {
     });
 };
 
+initializeSlick('.slick');
+
 getTMDBSession();
 
-fetchMovies(popularMoviesURL, 'popular')
-  .then(() => {
-    fetchMovies(topRatedMoviesURL, 'rated')
-      .then(() => {
-        initializeSlick('.slick')
-      })
-  });
+fetchMovies(popularMoviesURL, 'popular');
+
+fetchMovies(topRatedMoviesURL, 'rated');

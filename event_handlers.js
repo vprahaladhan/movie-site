@@ -13,10 +13,7 @@ document.getElementById('search-button').addEventListener('click', () => {
 
   if (keyword.length >= 1) {
     fetchMovies(`${searchMoviesURL}&query=${keyword}&page=${currentPage}`, 'search')
-      .then(() => {
-        initSlick();
-        document.getElementById('search-keyword').value = '';
-      });
+      .then(() => document.getElementById('search-keyword').value = '');
   };
 });
 
@@ -61,18 +58,3 @@ document.getElementById('liked-filter').onclick = ({ target }) => {
 //     target.innerText = 'Show Only Liked';
 //   };
 // }
-
-const initSlick = () => {
-  initializeSlick('#movie-search');
-
-  $('#movie-search').on('beforeChange', (event, slick, currentSlide, nextSlide) => {
-    const slidesToShow = $('#movie-search').slick('slickGetOption', 'slidesToShow');
-    if (nextSlide === (currentPage * 20 - slidesToShow)) {  
-      fetch(`${searchMoviesURL}&query=${keyword}&page=${++currentPage}`)
-        .then(response => response.json())
-        .then(({ results }) => results.forEach(movie => {
-          $('#movie-search').slick('slickAdd', createMovieSlide(movie));
-        }));
-    };
-  });
-};
